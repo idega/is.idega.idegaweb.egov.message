@@ -63,7 +63,7 @@ public class MessageLetterContext extends PrintingContextImpl {
 
 		try {
 			UserBusiness userBuiz = getUserService(iwuc.getApplicationContext());
-			address = userBuiz.getUserAddressByAddressType(((Integer) iwuc.getCurrentUser().getPrimaryKey()).intValue(), userBuiz.getAddressHome().getAddressType2());
+			address = userBuiz.getUserAddressByAddressType(((Integer) user.getPrimaryKey()).intValue(), userBuiz.getAddressHome().getAddressType2());
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
@@ -71,7 +71,7 @@ public class MessageLetterContext extends PrintingContextImpl {
 		if (address == null) {
 			try {
 				UserBusiness userBuiz = getUserService(iwuc.getApplicationContext());
-				address = userBuiz.getUserAddressByAddressType(((Integer) iwuc.getCurrentUser().getPrimaryKey()).intValue(), userBuiz.getAddressHome().getAddressType1());
+				address = userBuiz.getUserAddressByAddressType(((Integer) user.getPrimaryKey()).intValue(), userBuiz.getAddressHome().getAddressType1());
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
