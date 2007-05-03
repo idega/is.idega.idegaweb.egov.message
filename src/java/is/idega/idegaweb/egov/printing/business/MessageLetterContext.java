@@ -23,11 +23,6 @@ import com.idega.block.process.message.data.Message;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.core.location.data.Address;
-import com.idega.core.location.data.AddressHome;
-import com.idega.core.location.data.AddressType;
-import com.idega.core.location.data.PostalCode;
-import com.idega.core.location.data.PostalCodeHome;
-import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
@@ -62,8 +57,6 @@ public class MessageLetterContext extends PrintingContextImpl {
 		props.put("iwb", getBundle(iwuc));
 		props.put("iwrb", getResourceBundle(iwuc));
 
-		IWApplicationContext iwac = iwuc.getApplicationContext();
-
 		User user = msg.getOwner();
 		props.put("user", user);
 		Address address = null;
@@ -77,26 +70,8 @@ public class MessageLetterContext extends PrintingContextImpl {
 		}
 		if (address == null) {
 			try {
-				UserBusiness ub = (UserBusiness) IBOLookup.getServiceInstance(iwac, UserBusiness.class);
-				AddressHome ah = ub.getAddressHome();
-				AddressType adType = ah.getAddressType1();
-				Address tempAddress = null;
-				tempAddress = ah.create();
-				tempAddress.setAddressType(adType);
-				tempAddress.setCity("");
-
-				tempAddress.setStreetName("");
-				tempAddress.setStreetNumber("");
-
-				PostalCode pc = tempAddress.getPostalCode();
-				if (pc == null) {
-					PostalCodeHome ph = (PostalCodeHome) IDOLookup.getHome(PostalCode.class);
-					pc = ph.create();
-				}
-				pc.setPostalCode("");
-				tempAddress.setPostalCode(pc);
-				address = tempAddress;
-
+				UserBusiness userBuiz = getUserService(iwuc.getApplicationContext());
+				address = userBuiz.getUserAddressByAddressType(((Integer) iwuc.getCurrentUser().getPrimaryKey()).intValue(), userBuiz.getAddressHome().getAddressType1());
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
