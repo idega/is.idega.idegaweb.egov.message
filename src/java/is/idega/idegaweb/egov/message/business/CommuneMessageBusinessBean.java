@@ -15,14 +15,11 @@ import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
 import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
 import is.idega.idegaweb.egov.message.data.UserMessage;
 import is.idega.idegaweb.egov.message.data.UserMessageHome;
-
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
-
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
-
 import com.idega.block.process.business.CaseBusiness;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.data.CaseCode;
@@ -35,6 +32,7 @@ import com.idega.business.IBORuntimeException;
 import com.idega.core.component.data.ICObject;
 import com.idega.core.contact.data.Email;
 import com.idega.core.file.data.ICFile;
+import com.idega.core.messaging.MessagingSettings;
 import com.idega.data.IDOCreateException;
 import com.idega.data.IDOException;
 import com.idega.data.IDOStoreException;
@@ -59,14 +57,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	private final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.egov.message";
 	public static final String MESSAGE_PROPERTIES = "message_properties";
 	public static final String MAIL_PROPERTIES = "mail_properties";
-
-	private static String DEFAULT_SMTP_MAILSERVER = "mail.agurait.com";
-	private static String PROP_SYSTEM_SMTP_MAILSERVER = "messagebox_smtp_mailserver";
-	private static String PROP_MESSAGEBOX_FROM_ADDRESS = "messagebox_from_mailaddress";
-	private static String PROP_SYSTEM_FORCED_RECEIVER = "messagebox_forced_receiver_address";
-	private static String PROP_SYSTEM_BCC_RECEIVER = "messagebox_bcc_receiver_address";
-	private static String DEFAULT_MESSAGEBOX_FROM_ADDRESS = "messagebox@idega.com";
-
+	
 	public static final String USER_PROP_SEND_TO_MESSAGE_BOX = "msg_send_box";
 	public static final String USER_PROP_SEND_TO_EMAIL = "msg_send_email";
 
@@ -554,15 +545,15 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	public void sendMessage(String email, String subject, String body, File attachment) {
 		String receiver = email.trim();
-		String mailServer = DEFAULT_SMTP_MAILSERVER;
-		String fromAddress = DEFAULT_MESSAGEBOX_FROM_ADDRESS;
+		String mailServer = MessagingSettings.DEFAULT_SMTP_MAILSERVER;
+		String fromAddress = MessagingSettings.DEFAULT_MESSAGEBOX_FROM_ADDRESS;
 		String forcedToAddress = null;
 		String bccReceiver = null;
 		try {
-			mailServer = getPropertyValue(PROP_SYSTEM_SMTP_MAILSERVER, DEFAULT_SMTP_MAILSERVER);
-			fromAddress = getPropertyValue(PROP_MESSAGEBOX_FROM_ADDRESS, DEFAULT_MESSAGEBOX_FROM_ADDRESS);
-			forcedToAddress = getPropertyValue(PROP_SYSTEM_FORCED_RECEIVER, "notset");
-			bccReceiver = getPropertyValue(PROP_SYSTEM_BCC_RECEIVER, "notset");
+			mailServer = getPropertyValue(MessagingSettings.PROP_SYSTEM_SMTP_MAILSERVER, MessagingSettings.DEFAULT_SMTP_MAILSERVER);
+			fromAddress = getPropertyValue(MessagingSettings.PROP_MESSAGEBOX_FROM_ADDRESS, MessagingSettings.DEFAULT_MESSAGEBOX_FROM_ADDRESS);
+			forcedToAddress = getPropertyValue(MessagingSettings.PROP_SYSTEM_FORCED_RECEIVER, "notset");
+			bccReceiver = getPropertyValue(MessagingSettings.PROP_SYSTEM_BCC_RECEIVER, "notset");
 		}
 		catch (Exception e) {
 			System.err.println("MessageBusinessBean: Error getting mail property from bundle");
