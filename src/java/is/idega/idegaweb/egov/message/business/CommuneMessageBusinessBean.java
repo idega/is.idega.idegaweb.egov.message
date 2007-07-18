@@ -57,7 +57,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	private final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.egov.message";
 	public static final String MESSAGE_PROPERTIES = "message_properties";
 	public static final String MAIL_PROPERTIES = "mail_properties";
-	
+
 	public static final String USER_PROP_SEND_TO_MESSAGE_BOX = "msg_send_box";
 	public static final String USER_PROP_SEND_TO_EMAIL = "msg_send_email";
 
@@ -258,6 +258,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			if (sendToBox) {
 				msgValue.setMessageType(getTypeUserMessage());
 				message = createMessage(msgValue);
+				message.setContentCode(msgValue.getContentCode());
 			}
 
 			// send as email
@@ -338,7 +339,8 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	/**
-	 * This property is for setting if to create letter messages even when the user has an email address.
+	 * This property is for setting if to create letter messages even when the
+	 * user has an email address.
 	 * 
 	 * @return value of the set property. Default is false.
 	 */
@@ -373,7 +375,8 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	/**
-	 * @return Collection of PrintedLetterMessage that have already been printed, created between dates
+	 * @return Collection of PrintedLetterMessage that have already been printed,
+	 *         created between dates
 	 */
 	public Collection getPrintedLetterMessagesByType(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findPrintedLettersByType(type, from, to, resultSize, startingIndex);
@@ -668,7 +671,8 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	/**
-	 * Gets the value for a property name ... replaces the bundle properties that were used previously
+	 * Gets the value for a property name ... replaces the bundle properties that
+	 * were used previously
 	 * 
 	 * @param propertyName
 	 * @return
