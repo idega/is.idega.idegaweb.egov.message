@@ -259,6 +259,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 				msgValue.setMessageType(getTypeUserMessage());
 				message = createMessage(msgValue);
 				message.setContentCode(msgValue.getContentCode());
+				message.store();
 			}
 
 			// send as email
