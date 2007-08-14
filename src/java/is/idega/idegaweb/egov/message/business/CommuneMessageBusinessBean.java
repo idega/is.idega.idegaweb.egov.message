@@ -15,11 +15,14 @@ import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
 import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
 import is.idega.idegaweb.egov.message.data.UserMessage;
 import is.idega.idegaweb.egov.message.data.UserMessageHome;
+
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
+
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+
 import com.idega.block.process.business.CaseBusiness;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.data.CaseCode;
