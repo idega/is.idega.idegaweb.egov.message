@@ -8,7 +8,7 @@
   <groupId>com.idega.block.egov</groupId>
   <artifactId>is.idega.idegaweb.egov.message</artifactId>
   <packaging>jar</packaging>
-  <version>4.0-SNAPSHOT</version>
+  <version>${com.idega.block.egov-is.idega.idegaweb.egov.message-version}</version>
   <inceptionYear>2005</inceptionYear>
   <description>eGov Messages</description>
   <parent>
@@ -33,38 +33,30 @@
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.core</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
      </dependency>
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.user</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.idega.block.platform</groupId>
       <artifactId>com.idega.block.process</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>itextpdf</groupId>
       <artifactId>itext-paulo</artifactId>
-      <version>139</version>
+      <version>${itextpdf-itext-paulo-version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>itext</groupId>
       <artifactId>itext-xml</artifactId>
-      <version>1.02</version>
+      <version>${itext-itext-xml-version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>com.idega.block.addon</groupId>
       <artifactId>com.idega.block.pdf</artifactId>
-      <version>4.0-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>javamail</groupId>
@@ -75,7 +67,7 @@
     <dependency>
       <groupId>ujac</groupId>
       <artifactId>ujac</artifactId>
-      <version>0.9.25</version>
+      <version>${ujac-ujac-version}</version>
       <type>jar</type>
     </dependency>
   </dependencies>
