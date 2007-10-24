@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>eGov Messages</name>
   <artifactId>is.idega.idegaweb.egov.message</artifactId>
-  <currentVersion>1.0.1</currentVersion>
+  <currentVersion>1.0.2</currentVersion>
   <inceptionYear>2007</inceptionYear>
   <shortDescription>eGov Message</shortDescription>
   <versions>
