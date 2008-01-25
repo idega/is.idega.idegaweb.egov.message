@@ -5,6 +5,12 @@
 	</properties>
 
 	<body>
+		<release version="1.0.3" date="2008-01-25">
+			<action dev="laddi" type="update">
+				Declaring new version to get in a new signature for reykjavík.
+			</action>
+		</release>
+
 		<release version="1.0.2" date="2007-10-24">
 			<action dev="laddi" type="update">
 				Declaring new version to get in new message and signature for reykjavík.
