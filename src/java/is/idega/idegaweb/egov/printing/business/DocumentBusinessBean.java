@@ -1069,18 +1069,20 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	private String encodeFontStyle(Font font) {
 		StringBuffer s = new StringBuffer();
-		if (font.isBold()) {
-			s.append(MarkupTags.CSS_BOLD).append(",");
-		}
-		if (font.isItalic()) {
-			s.append(MarkupTags.CSS_ITALIC).append(",");
-		}
-		if (font.isUnderlined()) {
-			s.append(MarkupTags.CSS_UNDERLINE).append(",");
-		}
-		if (font.isStrikethru()) {
-			s.append(MarkupTags.CSS_LINETHROUGH);
-		}
+		
+//		FIXME: commented out because doesn' compile
+//		if (font.isBold()) {
+//			s.append(MarkupTags.CSS_BOLD).append(",");
+//		}
+//		if (font.isItalic()) {
+//			s.append(MarkupTags.CSS_ITALIC).append(",");
+//		}
+//		if (font.isUnderlined()) {
+//			s.append(MarkupTags.CSS_UNDERLINE).append(",");
+//		}
+//		if (font.isStrikethru()) {
+//			s.append(MarkupTags.CSS_LINETHROUGH);
+//		}
 
 		return s.toString();
 	}
