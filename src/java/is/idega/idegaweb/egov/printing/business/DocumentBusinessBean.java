@@ -66,7 +66,6 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.markup.MarkupTags;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -81,18 +80,21 @@ import com.lowagie.text.xml.XmlPeer;
  * @author <a href="mailto:aron@idega.is">Aron Birkir </a>
  * @version 1.0
  * 
- * Scale dimension of the logo and the position of it can be set with bundle properties in the commune bundle. (Use BundlePropertySetter)
+ * Scale dimension of the logo and the position of it can be set with bundle
+ * properties in the commune bundle. (Use BundlePropertySetter)
  * 
  * The position of the address box can also be set with bundle properties.
  * 
  * The properties concerning these settings are all prefixed with "printing.".
  * 
- * To activate the bundle property changes you need to set the bundle property "printing.dimension_refresh" to "true";
+ * To activate the bundle property changes you need to set the bundle property
+ * "printing.dimension_refresh" to "true";
  * 
- * Every measure is in millimeters(mm). X coordinates are measured from the left side of the page(paper). y coordinates are measured from bottom of
- * the page
+ * Every measure is in millimeters(mm). X coordinates are measured from the left
+ * side of the page(paper). y coordinates are measured from bottom of the page
  * 
- * The address box is specified with its lower left corner coordinates and upper right corner coordinates
+ * The address box is specified with its lower left corner coordinates and upper
+ * right corner coordinates
  */
 public class DocumentBusinessBean extends com.idega.business.IBOServiceBean implements DocumentBusiness {
 
@@ -1069,20 +1071,20 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	private String encodeFontStyle(Font font) {
 		StringBuffer s = new StringBuffer();
-		
-//		FIXME: commented out because doesn' compile
-//		if (font.isBold()) {
-//			s.append(MarkupTags.CSS_BOLD).append(",");
-//		}
-//		if (font.isItalic()) {
-//			s.append(MarkupTags.CSS_ITALIC).append(",");
-//		}
-//		if (font.isUnderlined()) {
-//			s.append(MarkupTags.CSS_UNDERLINE).append(",");
-//		}
-//		if (font.isStrikethru()) {
-//			s.append(MarkupTags.CSS_LINETHROUGH);
-//		}
+
+		//		FIXME: commented out because doesn' compile
+		//		if (font.isBold()) {
+		//			s.append(MarkupTags.CSS_BOLD).append(",");
+		//		}
+		//		if (font.isItalic()) {
+		//			s.append(MarkupTags.CSS_ITALIC).append(",");
+		//		}
+		//		if (font.isUnderlined()) {
+		//			s.append(MarkupTags.CSS_UNDERLINE).append(",");
+		//		}
+		//		if (font.isStrikethru()) {
+		//			s.append(MarkupTags.CSS_LINETHROUGH);
+		//		}
 
 		return s.toString();
 	}
