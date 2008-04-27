@@ -574,6 +574,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		if ("notset".equals(bccReceiver)) {
 			bccReceiver = null;
 		}
+		
+		System.out.println("sending message in commune message business");
+		System.out.println("mailServer: "+mailServer);
+		System.out.println("fromAddress: "+fromAddress);
+		System.out.println("receiver: "+receiver);
+		System.out.println("subject: "+subject);
 
 		try {
 			if (attachment == null) {
