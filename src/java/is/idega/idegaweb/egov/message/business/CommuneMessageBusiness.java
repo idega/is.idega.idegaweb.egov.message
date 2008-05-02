@@ -304,29 +304,9 @@ public interface CommuneMessageBusiness extends IBOService, MessageBusiness {
 	public void sendMessage(String email, String subject, String body, File attachment) throws java.rmi.RemoteException;
 
 	/**
-	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#getIfUserPreferesMessageByEmail
-	 */
-	public boolean getIfUserPreferesMessageByEmail(User user) throws java.rmi.RemoteException;
-
-	/**
-	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#getIfUserPreferesMessageInMessageBox
-	 */
-	public boolean getIfUserPreferesMessageInMessageBox(User user) throws java.rmi.RemoteException;
-
-	/**
 	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#getIfCanSendEmail
 	 */
 	public boolean getIfCanSendEmail() throws java.rmi.RemoteException;
-
-	/**
-	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#setIfUserPreferesMessageByEmail
-	 */
-	public void setIfUserPreferesMessageByEmail(User user, boolean preference) throws java.rmi.RemoteException;
-
-	/**
-	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#setIfUserPreferesMessageInMessageBox
-	 */
-	public void setIfUserPreferesMessageInMessageBox(User user, boolean preference) throws java.rmi.RemoteException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#getMessageSession

@@ -10,6 +10,8 @@ package is.idega.idegaweb.egov.message.business;
 
 import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
 import is.idega.idegaweb.egov.message.data.MessageHandlerInfoHome;
+import is.idega.idegaweb.egov.message.data.MessageReceiver;
+import is.idega.idegaweb.egov.message.data.MessageReceiverHome;
 import is.idega.idegaweb.egov.message.data.PrintMessage;
 import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
 import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
@@ -38,6 +40,8 @@ import com.idega.core.file.data.ICFile;
 import com.idega.core.messaging.MessagingSettings;
 import com.idega.data.IDOCreateException;
 import com.idega.data.IDOException;
+import com.idega.data.IDOLookup;
+import com.idega.data.IDOLookupException;
 import com.idega.data.IDOStoreException;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWMainApplication;
@@ -574,12 +578,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		if ("notset".equals(bccReceiver)) {
 			bccReceiver = null;
 		}
-		
+
 		System.out.println("sending message in commune message business");
-		System.out.println("mailServer: "+mailServer);
-		System.out.println("fromAddress: "+fromAddress);
-		System.out.println("receiver: "+receiver);
-		System.out.println("subject: "+subject);
+		System.out.println("mailServer: " + mailServer);
+		System.out.println("fromAddress: " + fromAddress);
+		System.out.println("receiver: " + receiver);
+		System.out.println("subject: " + subject);
 
 		try {
 			if (attachment == null) {
@@ -611,23 +615,35 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	public boolean getIfUserPreferesMessageByEmail(User user) {
-		IWPropertyList propertyList = getUserMessagePreferences(user);
+		MessageReceiver receiver = getMessageReceiver(user);
+		if (receiver != null) {
+			return receiver.receiveEmails();
+		}
+		else {
+			IWPropertyList propertyList = getUserMessagePreferences(user);
 
-		if (propertyList != null) {
-			String property = propertyList.getProperty(USER_PROP_SEND_TO_EMAIL);
-			if (property != null) {
-				return Boolean.valueOf(property).booleanValue();
+			if (propertyList != null) {
+				String property = propertyList.getProperty(USER_PROP_SEND_TO_EMAIL);
+				if (property != null) {
+					return Boolean.valueOf(property).booleanValue();
+				}
 			}
 		}
 		return true;
 	}
 
 	public boolean getIfUserPreferesMessageInMessageBox(User user) {
-		IWPropertyList propertyList = getUserMessagePreferences(user);
-		if (propertyList != null) {
-			String property = propertyList.getProperty(USER_PROP_SEND_TO_MESSAGE_BOX);
-			if (property != null) {
-				return Boolean.valueOf(property).booleanValue();
+		MessageReceiver receiver = getMessageReceiver(user);
+		if (receiver != null) {
+			return receiver.receiveMessagesToBox();
+		}
+		else {
+			IWPropertyList propertyList = getUserMessagePreferences(user);
+			if (propertyList != null) {
+				String property = propertyList.getProperty(USER_PROP_SEND_TO_MESSAGE_BOX);
+				if (property != null) {
+					return Boolean.valueOf(property).booleanValue();
+				}
 			}
 		}
 		return true;
@@ -637,14 +653,42 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return Boolean.valueOf(getPropertyValue("can_send_email", Boolean.FALSE.toString())).booleanValue();
 	}
 
-	public void setIfUserPreferesMessageByEmail(User user, boolean preference) {
-		IWPropertyList propertyList = getUserMessagePreferences(user);
-		propertyList.setProperty(USER_PROP_SEND_TO_EMAIL, new Boolean(preference));
+	/*private void setIfUserPreferesMessageByEmail(User user, boolean preference) {
+		MessageReceiver receiver = getMessageReceiver(user);
+		if (receiver != null) {
+			receiver.setReceiveEmails(preference);
+			receiver.store();
+		}
+		else {
+			IWPropertyList propertyList = getUserMessagePreferences(user);
+			propertyList.setProperty(USER_PROP_SEND_TO_EMAIL, new Boolean(preference));
+		}
 	}
 
-	public void setIfUserPreferesMessageInMessageBox(User user, boolean preference) {
-		IWPropertyList propertyList = getUserMessagePreferences(user);
-		propertyList.setProperty(USER_PROP_SEND_TO_MESSAGE_BOX, new Boolean(preference));
+	private void setIfUserPreferesMessageInMessageBox(User user, boolean preference) {
+		MessageReceiver receiver = getMessageReceiver(user);
+		if (receiver != null) {
+			receiver.setReceiveMessagesToBox(preference);
+			receiver.store();
+		}
+		else {
+			IWPropertyList propertyList = getUserMessagePreferences(user);
+			propertyList.setProperty(USER_PROP_SEND_TO_MESSAGE_BOX, new Boolean(preference));
+		}
+	}*/
+
+	private MessageReceiver getMessageReceiver(User user) {
+		try {
+			MessageReceiverHome home = (MessageReceiverHome) IDOLookup.getHome(MessageReceiver.class);
+			return home.findByPrimaryKey(user.getPrimaryKey());
+		}
+		catch (IDOLookupException e) {
+			e.printStackTrace();
+		}
+		catch (FinderException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private UserBusiness getUserBusiness() throws RemoteException {
