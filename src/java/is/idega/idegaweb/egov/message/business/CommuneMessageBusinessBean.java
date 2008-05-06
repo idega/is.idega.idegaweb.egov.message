@@ -653,7 +653,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return Boolean.valueOf(getPropertyValue("can_send_email", Boolean.FALSE.toString())).booleanValue();
 	}
 
-	/*private void setIfUserPreferesMessageByEmail(User user, boolean preference) {
+	public void setIfUserPreferesMessageByEmail(User user, boolean preference) {
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
 			receiver.setReceiveEmails(preference);
@@ -665,7 +665,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
-	private void setIfUserPreferesMessageInMessageBox(User user, boolean preference) {
+	public void setIfUserPreferesMessageInMessageBox(User user, boolean preference) {
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
 			receiver.setReceiveMessagesToBox(preference);
@@ -675,7 +675,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			IWPropertyList propertyList = getUserMessagePreferences(user);
 			propertyList.setProperty(USER_PROP_SEND_TO_MESSAGE_BOX, new Boolean(preference));
 		}
-	}*/
+	}
 
 	private MessageReceiver getMessageReceiver(User user) {
 		try {
