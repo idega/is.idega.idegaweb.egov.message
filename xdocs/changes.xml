@@ -5,6 +5,12 @@
 	</properties>
 
 	<body>
+		<release version="1.0.5" date="2008-09-04">
+			<action dev="laddi" type="update">
+				Declaring new version to get in a new signature for reykjavík.
+			</action>
+		</release>
+
 		<release version="1.0.4" date="2008-05-02">
 			<action dev="laddi" type="update">
 				Changed so that user message preferences are stored as metadata in User BMP bean.
