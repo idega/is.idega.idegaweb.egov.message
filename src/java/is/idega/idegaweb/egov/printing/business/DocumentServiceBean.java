@@ -30,6 +30,7 @@ import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
+import com.idega.core.file.util.MimeTypeUtil;
 import com.idega.idegaweb.IWUserContext;
 import com.idega.io.MemoryFileBuffer;
 import com.idega.io.MemoryInputStream;
@@ -190,7 +191,7 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 		createBackup(fileName, is);
 
 		file.setFileValue(is);
-		file.setMimeType("application/x-pdf");
+		file.setMimeType(MimeTypeUtil.MIME_TYPE_PDF_2);
 
 		file.setName(fileName);
 		file.setFileSize(length);

@@ -41,6 +41,7 @@ import com.idega.block.process.data.Case;
 import com.idega.business.IBORuntimeException;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
+import com.idega.core.file.util.MimeTypeUtil;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
 import com.idega.idegaweb.IWBundle;
@@ -491,7 +492,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 				if (lettersProcessed > 0) {
 					if (registerBulkData) {
 						bulkFile.setFileValue(outerDocIS);
-						bulkFile.setMimeType("application/x-pdf");
+						bulkFile.setMimeType(MimeTypeUtil.MIME_TYPE_PDF_2);
 						bulkFile.setName(fileName + ".pdf");
 						bulkFile.setFileSize(outerBuf.length());
 						bulkFile.store();
@@ -574,7 +575,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		mis.reset();
 
 		file.setFileValue(mis);
-		file.setMimeType("application/x-pdf");
+		file.setMimeType(MimeTypeUtil.MIME_TYPE_PDF_2);
 		file.setName(fileName);
 		file.setFileSize(buffer.length());
 		file.store();
