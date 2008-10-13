@@ -182,6 +182,8 @@ public interface CommuneMessageBusiness extends IBOService, MessageBusiness {
 	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#createUserMessage
 	 */
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) throws java.rmi.RemoteException;
+	
+	public abstract MessageValue createUserMessageValue(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail);
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.business.CommuneMessageBusinessBean#createUserMessage

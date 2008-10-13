@@ -231,7 +231,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, null, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
 	}
 
-	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
+	public MessageValue createUserMessageValue(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
 		MessageValue value = new MessageValue();
 		setSimpleMessage(value, parentCase, receiver, subject, body);
 		value.setHandler(handler);
@@ -242,8 +242,13 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		value.setAlwaysSendLetter(new Boolean(alwaysSendLetter));
 		value.setSendMail(new Boolean(sendMail));
 		value.setAttachment(attachment);
-		return createUserMessage(value);
-
+		return value;
+	}
+	
+	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
+		
+		MessageValue mv = createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
+		return createUserMessage(mv);
 	}
 
 	public Message createUserMessage(MessageValue msgValue) {
