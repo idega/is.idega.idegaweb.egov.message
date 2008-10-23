@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.idega.block.pdf.business.PrintingContext;
 import com.idega.block.pdf.business.PrintingContextImpl;
 import com.idega.block.process.message.data.Message;
 import com.idega.business.IBOLookup;
@@ -54,7 +55,7 @@ public class MessageLetterContext extends PrintingContextImpl {
 		Map props = new HashMap();
 
 		props.put("iwuc", iwuc);
-		props.put("iwb", getBundle(iwuc));
+		props.put(PrintingContext.IW_BUNDLE_ROPERTY_NAME, getBundle(iwuc));
 		props.put("iwrb", getResourceBundle(iwuc));
 
 		User user = msg.getOwner();
