@@ -1,0 +1,41 @@
+    <document xmlns='http://maven.apache.org/changes/1.0.0'>
+	<properties>
+		<title>eGov Message changes</title>
+		<author email='laddi@idega.com'>Thorhallur "Laddi" Helgason</author>
+	</properties>
+
+	<body>
+		<release date='2009-01-27' description='First 4.1.x Release' version='4.1.0'>
+          <action type='add' dev='tryggvil'>First 4.1.x Release</action>
+        </release>
+        <release date='2008-09-04' version='1.0.5'>
+			<action type='update' dev='laddi'>
+				Declaring new version to get in a new signature for reykjavík.
+			</action>
+		</release>
+
+		<release date='2008-05-02' version='1.0.4'>
+			<action type='update' dev='laddi'>
+				Changed so that user message preferences are stored as metadata in User BMP bean.
+			</action>
+		</release>
+
+		<release date='2008-01-25' version='1.0.3'>
+			<action type='update' dev='laddi'>
+				Declaring new version to get in a new signature for reykjavík.
+			</action>
+		</release>
+
+		<release date='2007-10-24' version='1.0.2'>
+			<action type='update' dev='laddi'>
+				Declaring new version to get in new message and signature for reykjavík.
+			</action>
+		</release>
+
+		<release date='2007-03-27' version='1.0.1'>
+			<action type='update' dev='laddi'>
+				Declaring new version of block.
+			</action>
+		</release>
+	</body>
+</document>
