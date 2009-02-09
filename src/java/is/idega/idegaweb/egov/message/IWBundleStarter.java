@@ -40,7 +40,7 @@ public class IWBundleStarter implements IWBundleStartable {
 		// in that way overwritten methods are called
 		IBOLookup.registerImplementationForBean(MessageBusiness.class, CommuneMessageBusinessBean.class);
 
-		IWBundleResourceFilter.copyAllFilesFromJarDirectory(starterBundle.getApplication(), starterBundle, starterBundle.getResourcesVirtualPath());
+		IWBundleResourceFilter.copyAllFilesFromJarDirectory(starterBundle.getApplication(), starterBundle, "/resources/");
 	}
 
 	/*
