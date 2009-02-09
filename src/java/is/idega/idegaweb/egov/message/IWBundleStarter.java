@@ -17,6 +17,7 @@ import com.idega.block.process.message.business.MessageTypeManager;
 import com.idega.business.IBOLookup;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
+import com.idega.servlet.filter.IWBundleResourceFilter;
 
 /**
  * Last modified: $Date$ by $Author$
@@ -38,6 +39,8 @@ public class IWBundleStarter implements IWBundleStartable {
 		// register CommuneMessageBusinessBean as implementation of MessageBusiness
 		// in that way overwritten methods are called
 		IBOLookup.registerImplementationForBean(MessageBusiness.class, CommuneMessageBusinessBean.class);
+
+		IWBundleResourceFilter.copyResourceFromJarToWebapp(starterBundle.getApplication(), starterBundle.getResourcesVirtualPath());
 	}
 
 	/*
