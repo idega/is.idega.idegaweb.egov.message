@@ -8,7 +8,9 @@ import javax.ejb.FinderException;
 import com.idega.block.process.data.AbstractCaseBMPBean;
 import com.idega.block.process.data.Case;
 import com.idega.core.file.data.ICFile;
+import com.idega.data.IDOAddRelationshipException;
 import com.idega.data.IDOException;
+import com.idega.data.IDORemoveRelationshipException;
 import com.idega.data.IDORuntimeException;
 import com.idega.data.query.Criteria;
 import com.idega.data.query.InCriteria;
@@ -45,10 +47,12 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 
 	private static final String CASE_CODE_DESCRIPTION = "Letter Message";
 
+	@Override
 	public String getEntityName() {
 		return "MSG_LETTER_MESSAGE";
 	}
 
+	@Override
 	public void initializeAttributes() {
 		addGeneralCaseRelation();
 		this.addAttribute(COLUMN_SUBJECT, "Message subject", String.class);
@@ -60,14 +64,17 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		this.addAttribute(COLUMN_CONTENT_CODE, "Message contentcode", String.class, 20);
 	}
 
+	@Override
 	public String getCaseCodeKey() {
 		return CASE_CODE_KEY;
 	}
 
+	@Override
 	public String getCaseCodeDescription() {
 		return CASE_CODE_DESCRIPTION;
 	}
 
+	@Override
 	public void setDefaultValues() {
 		setLetterType(MessageConstants.LETTER_TYPE_DEFAULT);
 	}
@@ -88,18 +95,22 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void setSubject(String subject) {
 		this.setColumn(COLUMN_SUBJECT, subject);
 	}
 
+	@Override
 	public String getSubject() {
 		return this.getStringColumnValue(COLUMN_SUBJECT);
 	}
 
+	@Override
 	public void setBody(String body) {
 		this.setColumn(COLUMN_BODY, body);
 	}
 
+	@Override
 	public String getBody() {
 		return this.getStringColumnValue(COLUMN_BODY);
 	}
@@ -607,5 +618,19 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 
 	public int ejbHomeGetNumberOfMessages(User user, String[] status) throws IDOException {
 		return super.ejbHomeGetCountCasesByUserAndStatusArray(user, status);
+	}
+
+	public void addSubscriber(User subscriber)
+			throws IDOAddRelationshipException {
+		throw new UnsupportedOperationException("This method is not implemented!");
+	}
+
+	public Collection<User> getSubscribers() {
+		throw new UnsupportedOperationException("This method is not implemented!");
+	}
+
+	public void removeSubscriber(User subscriber)
+			throws IDORemoveRelationshipException {
+		throw new UnsupportedOperationException("This method is not implemented!");
 	}
 }
