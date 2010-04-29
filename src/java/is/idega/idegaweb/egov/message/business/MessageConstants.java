@@ -19,5 +19,6 @@ public class MessageConstants {
 
 	public static final String TYPE_USER_MESSAGE = "SYMEDAN";
 	public static final String TYPE_SYSTEM_PRINT_MAIL_MESSAGE = "SYMEBRV";
-
+	
+	public static final String CAN_SEND_EMAIL = "can_send_email";
 }

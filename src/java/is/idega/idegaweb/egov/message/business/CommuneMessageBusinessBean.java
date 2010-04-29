@@ -191,6 +191,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * note: this method overwrites a method in MessageBusinessBean
 	 */
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, String subject, String body, boolean sendLetter) {
 		return createUserMessage(parentCase, receiver, null, subject, body, sendLetter);
 	}
@@ -655,7 +656,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	public boolean getIfCanSendEmail() {
-		return Boolean.valueOf(getPropertyValue("can_send_email", Boolean.FALSE.toString())).booleanValue();
+		return Boolean.valueOf(getPropertyValue(MessageConstants.CAN_SEND_EMAIL, Boolean.FALSE.toString())).booleanValue();
 	}
 
 	public void setIfUserPreferesMessageByEmail(User user, boolean preference) {
@@ -704,6 +705,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return (MessageSession) getSessionInstance(iwuc, MessageSession.class);
 	}
 
+	@Override
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
