@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE document
+	PUBLIC "-//UJAC.org//Print Document//EN" 
+	"http://ujac.sourceforge.net/ujac-print-document.dtd">
+
+<document bgcolor="#FFFFFF" size="A4" margin-left="70" margin-right="70" margin-top="120" margin-bottom="35" line-spacing="1.5">
+	
+	<font-def name="small" family="Helvetica" style="normal" size="8"/>
+	<font-def name="normal" family="Helvetica" size="12" style="normal"/>
+	<font-def name="section" family="Helvetica" size="12" style="bold"/>
+	<font-def name="footer-normal" family="Helvetica" size="9" style="normal"/>
+	<font-def name="footer-section" family="Helvetica" size="9" style="bold"/>
+	<font-def name="address" family="Helvetica" size="12" style="normal"/>
+	
+	<header padding-bottom="50">
+		<header-part><image source="commune-logo.gif" width="55" scale-to-fit="true" /></header-part>
+    </header>
+
+	<paragraph font="address"> 
+		${user.name}<br/>
+		${address.streetAddress}<br/>
+		${address.postalAddress}
+	</paragraph>
+	
+	<paragraph font="normal" spacing-before="18" halign="right" >
+		Skjálfandi, <date-format format="dd.MM.yyyy" value="${msg.created}" />
+	</paragraph>
+	
+	<paragraph font="section" spacing-before="18">
+		${msg.subject}
+	</paragraph>
+	
+	<paragraph font="normal" spacing-before="18">
+		${msg.body}
+	</paragraph>
+	
+</document>

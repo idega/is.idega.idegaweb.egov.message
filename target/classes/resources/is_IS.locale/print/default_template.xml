@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE document
+	PUBLIC "-//UJAC.org//Print Document//EN" 
+	"http://ujac.sourceforge.net/ujac-print-document.dtd">
+
+<document bgcolor="#FFFFFF" size="A4" margin-left="70" margin-right="70" margin-top="120" margin-bottom="35" line-spacing="1.5">
+	
+	<font-def name="small" family="Helvetica" style="normal" size="8"/>
+	<font-def name="normal" family="Helvetica" size="12" style="normal"/>
+	<font-def name="section" family="Helvetica" size="12" style="bold"/>
+	<font-def name="footer-normal" family="Helvetica" size="9" style="normal"/>
+	<font-def name="footer-section" family="Helvetica" size="9" style="bold"/>
+	<font-def name="address" family="Helvetica" size="12" style="normal"/>
+	
+	<header padding-bottom="50">
+		<header-part><image source="commune_logo.png" width="138" scale-to-fit="true" /></header-part>
+    </header>
+
+	<footer font="footer-normal">
+		<footer-part width="500">
+			<table widths="25,25,35,25" border-style="none" width="500" >
+				<font font-def="footer-section">
+					<cell>Póstfang</cell>
+					<cell>Aðsetur</cell>
+					<cell>Vefföng</cell>
+					<cell>Símar</cell>
+				</font>
+				<font font-def="footer-normal">
+					<cell>Reykjavíkurborg</cell>
+					<cell>Ráðhúsið</cell>
+					<cell>www.reykjavik.is</cell>
+					<cell>4 11 1000</cell>
+					
+					<cell>101 Reykjavík</cell>
+					<cell>Tjarnargötu 11</cell>
+					<cell>upplysingar@reykjavik.is</cell>
+					<cell>Símaver: 4 11 11 11</cell>
+					
+					<cell>Ísland</cell>
+					<cell>Reykjavík</cell>
+					<cell></cell>
+					<cell></cell>
+				</font>
+			</table>
+		</footer-part>
+	</footer>	
+
+	<paragraph font="address"> 
+		${user.name}<br/>
+		${address.streetAddress}<br/>
+		${address.postalAddress}
+	</paragraph>
+	
+	<paragraph font="normal" spacing-before="18" halign="right" >
+		Reykjavík, <date-format format="yyyy.MM.dd" value="${msg.created}" /> 
+	</paragraph>
+	
+	<paragraph font="section" spacing-before="18">
+		${msg.subject}
+	</paragraph>
+	
+	<paragraph font="normal" spacing-before="18">
+		${msg.body}
+	</paragraph>
+	
+</document>

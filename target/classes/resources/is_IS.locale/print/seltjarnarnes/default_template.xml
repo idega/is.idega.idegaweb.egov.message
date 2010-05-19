@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE document
+	PUBLIC "-//UJAC.org//Print Document//EN" 
+	"http://ujac.sourceforge.net/ujac-print-document.dtd">
+
+<document bgcolor="#FFFFFF" size="A4" margin-left="70" margin-right="70" margin-top="120" margin-bottom="35" line-spacing="1.5">
+	
+	<font-def name="small" family="Helvetica" style="normal" size="8"/>
+	<font-def name="normal" family="Helvetica" size="12" style="normal"/>
+	<font-def name="section" family="Helvetica" size="12" style="bold"/>
+	<font-def name="footer-normal" family="Helvetica" size="9" style="normal"/>
+	<font-def name="footer-section" family="Helvetica" size="9" style="bold"/>
+	<font-def name="address" family="Helvetica" size="12" style="normal"/>
+	
+	<header padding-bottom="50">
+		<header-part><image source="sel_logo.gif" width="138" scale-to-fit="true" /></header-part>
+    </header>
+
+	<footer font="footer-normal">
+		<footer-part width="500">
+			<table widths="25,25,35,25" border-style="none" width="500" >
+				<font font-def="footer-section">
+					<cell>Póstfang</cell>
+					<cell></cell>
+					<cell>Vefföng</cell>
+					<cell>Símar</cell>
+				</font>
+				<font font-def="footer-normal">
+					<cell>Austurströnd 2</cell>
+					<cell></cell>
+					<cell>www.seltjarnarnes.is</cell>
+					<cell>5959 100</cell>
+					
+					<cell>170 Seltjarnarnes</cell>
+					<cell></cell>
+					<cell>postur@seltjarnarnes.is</cell>
+					<cell>Fax: 5959 101</cell>
+					
+					<cell>Ísland</cell>
+					<cell></cell>
+					<cell></cell>
+					<cell></cell>
+				</font>
+			</table>
+		</footer-part>
+	</footer>	
+
+	<paragraph font="address"> 
+		${user.name}<br/>
+		${address.streetAddress}<br/>
+		${address.postalAddress}
+	</paragraph>
+	
+	<paragraph font="normal" spacing-before="18" halign="right" >
+		Seltjarnarnes, <date-format format="dd.MM.yyyy" value="${msg.created}" />
+	</paragraph>
+	
+	<paragraph font="section" spacing-before="18">
+		${msg.subject}
+	</paragraph>
+	
+	<paragraph font="normal" spacing-before="18">
+		${msg.body}
+	</paragraph>
+	
+</document>
