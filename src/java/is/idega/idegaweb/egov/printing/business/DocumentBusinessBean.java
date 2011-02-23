@@ -827,7 +827,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 		try {
 			BaseFont bf = BaseFont.createFont(font.getFamilyname(), BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-			cb.setFontAndSize(bf, font.getSize());
+			cb.setFontAndSize(bf, font.size());
 			// we show some text starting on some absolute position with a given
 			// alignment
 			cb.showTextAligned(PdfContentByte.ALIGN_RIGHT, dateString, getPointsFromMM(210 - 20), getPointsFromMM(297 - 20), 0);
@@ -1062,10 +1062,10 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	private String encodeFont(Font font) {
 		StringBuffer fontBuffer = new StringBuffer();
 		fontBuffer.append(font.getFamilyname()).append("-");
-		fontBuffer.append(font.getSize()).append("-");
+		fontBuffer.append(font.size()).append("-");
 		fontBuffer.append(encodeFontStyle(font)).append("-");
-		if (font.getColor() != null) {
-			fontBuffer.append(IWColor.getHexColorString(font.getColor()));
+		if (font.color() != null) {
+			fontBuffer.append(IWColor.getHexColorString(font.color()));
 		}
 		return fontBuffer.toString();
 	}
