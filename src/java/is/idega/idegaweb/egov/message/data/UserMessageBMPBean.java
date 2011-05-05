@@ -16,7 +16,7 @@ import com.idega.user.data.User;
 
 /**
  * Title: Description: Copyright: Copyright (c) 2002 Company:
- * 
+ *
  * @author Anders Lindman
  * @version 1.0
  */
@@ -81,26 +81,32 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 		return this.getStringColumnValue(COLUMN_BODY);
 	}
 
+	@Override
 	public int getSenderID() {
 		return this.getIntColumnValue(COLUMN_SENDER);
 	}
 
+	@Override
 	public void setSenderID(int userID) {
 		this.setColumn(COLUMN_SENDER, userID);
 	}
 
+	@Override
 	public User getSender() {
 		return (User) getColumnValue(COLUMN_SENDER);
 	}
 
+	@Override
 	public void setSender(User user) {
 		this.setColumn(COLUMN_SENDER, user.getPrimaryKey());
 	}
 
+	@Override
 	public String getContentCode() {
 		return this.getStringColumnValue(COLUMN_CONTENT_CODE);
 	}
 
+	@Override
 	public void setContentCode(String contentCode) {
 		this.setColumn(COLUMN_CONTENT_CODE, contentCode);
 	}
@@ -127,6 +133,17 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 
 	public Collection ejbFindMessagesByStatus(User user, Collection groups, String[] status, int numberOfEntries, int startingEntry) throws FinderException {
 		return super.ejbFindAllCasesByUserAndGroupsAndStatusArray(user, groups, status, numberOfEntries, startingEntry);
+	}
+	/**
+	 *
+	 * @param user : User
+	 * @param caseId : String
+	 * @return Collection<Integer>
+	 */
+	public Collection<Integer> ejbFindMessages(User user, String caseId) throws FinderException{
+		SelectQuery query = this.idoSelectQueryGetAllCasesByUser(user);
+		query.addCriteria(this.idoCriteriaForParentCase(caseId));
+		return super.idoFindPKsByQuery(query);
 	}
 
 	public int ejbHomeGetNumberOfMessagesByStatus(User user, String[] status) throws IDOException {
@@ -175,17 +192,22 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 		return super.ejbHomeGetCountCasesByUserAndGroupsAndStatusArray(user, groups, status);
 	}
 
+	@Override
 	public void addSubscriber(User subscriber)
 			throws IDOAddRelationshipException {
 		throw new UnsupportedOperationException("This method is not implemented!");
 	}
 
+	@Override
 	public Collection<User> getSubscribers() {
 		throw new UnsupportedOperationException("This method is not implemented!");
 	}
 
+	@Override
 	public void removeSubscriber(User subscriber)
 			throws IDORemoveRelationshipException {
 		throw new UnsupportedOperationException("This method is not implemented!");
 	}
+
+
 }

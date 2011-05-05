@@ -23,24 +23,28 @@ import com.idega.util.IWTimestamp;
 
 /**
  * Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:laddi@idega.com">laddi</a>
  * @version $Revision$
  */
 public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedLetterMessageHome {
 
+	@Override
 	protected Class getEntityInterfaceClass() {
 		return PrintedLetterMessage.class;
 	}
 
+	@Override
 	public Message create() throws javax.ejb.CreateException {
 		return (PrintedLetterMessage) super.createIDO();
 	}
 
+	@Override
 	public Message findByPrimaryKey(Object pk) throws javax.ejb.FinderException {
 		return (PrintedLetterMessage) super.findByPrimaryKeyIDO(pk);
 	}
 
+	@Override
 	public Collection findMessages(User user) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindMessages(user);
@@ -48,6 +52,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findMessagesByStatus(User user, String[] status) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindMessagesByStatus(user, status);
@@ -55,6 +60,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findAllUnPrintedLetters() throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindAllUnPrintedLetters();
@@ -62,6 +68,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findAllPrintedLetters() throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindAllPrintedLetters();
@@ -69,6 +76,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public int getNumberOfUnprintedLettersByType(String letterType) {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfUnprintedLettersByType(letterType);
@@ -76,6 +84,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfPrintedLettersByType(String letterType) {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfPrintedLettersByType(letterType);
@@ -83,6 +92,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfLettersByStatusAndType(String caseStatus, String letterType) {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfLettersByStatusAndType(caseStatus,
@@ -91,6 +101,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfUnPrintedPasswordLetters() {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfUnPrintedPasswordLetters();
@@ -98,6 +109,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfPrintedPasswordLetters() {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfPrintedPasswordLetters();
@@ -105,6 +117,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfUnPrintedDefaultLetters() {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfUnPrintedDefaultLetters();
@@ -112,6 +125,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfPrintedDefaultLetters() {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfPrintedDefaultLetters();
@@ -119,6 +133,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public String[] getLetterTypes() {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		String[] theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetLetterTypes();
@@ -126,6 +141,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public Collection findPrintedLettersByType(String letterType, int resultSize, int startingIndex)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -135,6 +151,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findPrintedLettersByType(String letterType, IWTimestamp from, IWTimestamp to, int resultSize,
 			int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -144,6 +161,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findSinglePrintedLettersByType(String letterType, IWTimestamp from, IWTimestamp to, int resultSize,
 			int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -153,6 +171,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findByBulkFile(int file, String letterType, String status, int resultSize, int startingIndex)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -162,6 +181,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findSingleByTypeAndStatus(String letterType, String status, IWTimestamp from, IWTimestamp to,
 			int resultSize, int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -171,6 +191,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findUnPrintedLettersByType(String letterType, int resultSize, int startingIndex)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -180,6 +201,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findUnPrintedLettersByType(String letterType, IWTimestamp from, IWTimestamp to, int resultSize,
 			int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -189,6 +211,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findSingleUnPrintedLettersByType(String letterType, IWTimestamp from, IWTimestamp to,
 			int resultSize, int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -198,6 +221,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findUnPrintedPasswordLetters(int resultSize, int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindUnPrintedPasswordLetters(resultSize,
@@ -206,6 +230,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findPrintedPasswordLetters(int resultSize, int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindPrintedPasswordLetters(resultSize,
@@ -214,6 +239,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findUnPrintedDefaultLetters(int resultSize, int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindUnPrintedDefaultLetters(resultSize,
@@ -222,6 +248,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findPrintedDefaultLetters(int resultSize, int startingIndex) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindPrintedDefaultLetters(resultSize,
@@ -230,6 +257,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public String[] getPrintMessageTypes() {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		String[] theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetPrintMessageTypes();
@@ -237,6 +265,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public Collection findLettersByChildcare(int providerID, String ssn, String msgId, IWTimestamp from, IWTimestamp to)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -246,6 +275,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findAllLettersBySchool(int providerID, String ssn, String msgId, IWTimestamp from, IWTimestamp to)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -255,6 +285,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findLetters(String[] msgId) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindLetters(msgId);
@@ -262,6 +293,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public java.util.Collection findMessages(com.idega.user.data.User user, String[] status)
 			throws javax.ejb.FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -270,6 +302,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findMessages(User user, String[] status, int numberOfEntries, int startingEntry)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -279,6 +312,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findMessages(Group group, String[] status) throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		java.util.Collection ids = ((PrintedLetterMessageBMPBean) entity).ejbFindMessages(group, status);
@@ -286,6 +320,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findMessages(Group group, String[] status, int numberOfEntries, int startingEntry)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -295,6 +330,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public Collection findMessages(User user, Collection groups, String[] status, int numberOfEntries, int startingEntry)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -304,6 +340,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	@Override
 	public int getNumberOfMessages(User user, Collection groups, String[] status) throws IDOException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfMessages(user, groups, status);
@@ -311,10 +348,17 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 		return theReturn;
 	}
 
+	@Override
 	public int getNumberOfMessages(User user, String[] status) throws IDOException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
 		int theReturn = ((PrintedLetterMessageBMPBean) entity).ejbHomeGetNumberOfMessages(user, status);
 		this.idoCheckInPooledEntity(entity);
 		return theReturn;
+	}
+
+	@Override
+	public Collection findMessages(User user, String caseId)
+			throws FinderException {
+		return null;
 	}
 }

@@ -6,6 +6,20 @@
       <type>java.lang.String</type>
       <value>is.idega.idegaweb.egov.message</value>
     </key>
+    <key>
+      <name>iw_components</name>
+      <value>
+        <map />
+      </value>
+      <type>map</type>
+    </key>
+    <key>
+      <name>create_letter_message_having_email</name>
+      <type>java.lang.String</type>
+      <value>false</value>
+      <simple>false</simple>
+      <reload>false</reload>
+    </key>
   </map>
 </pxml>
 
