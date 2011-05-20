@@ -357,7 +357,7 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 	}
 
 	@Override
-	public Collection findMessages(User user, String caseId)
+	public Collection  <Message> findMessages(User user, String caseId)
 			throws FinderException {
 		return null;
 	}
