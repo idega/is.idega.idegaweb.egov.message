@@ -1,10 +1,10 @@
 /*
  * $Id$
- * 
+ *
  * Copyright (C) 2002 Idega hf. All Rights Reserved.
- * 
+ *
  * This software is the proprietary information of Idega hf. Use is subject to license terms.
- * 
+ *
  */
 package is.idega.idegaweb.egov.message.business;
 
@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+import javax.mail.MessagingException;
 
 import com.idega.block.process.business.CaseBusiness;
 import com.idega.block.process.data.Case;
@@ -54,6 +55,7 @@ import com.idega.user.business.UserProperties;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
+import com.idega.util.SendMail;
 
 /**
  * @author Anders Lindman , <a href="mailto:tryggvi@idega.is">Tryggvi Larusson</a>
@@ -87,6 +89,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
+	@Override
 	public void deleteUserMessage(int messageID) {
 		try {
 			Message message = getUserMessage(messageID);
@@ -107,10 +110,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return MessageConstants.TYPE_SYSTEM_PRINT_MAIL_MESSAGE;
 	}
 
+	@Override
 	public CaseCode getCaseCodeUserMessage() throws RemoteException, FinderException {
 		return getCaseBusiness().getCaseCode(getTypeUserMessage());
 	}
 
+	@Override
 	public CaseCode getCaseCodePrintedLetterMessage() throws RemoteException, FinderException {
 		return getCaseBusiness().getCaseCode(getTypeMailMessage());
 	}
@@ -119,15 +124,18 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return this;
 	}
 
+	@Override
 	public Message getUserMessage(int messageId) throws FinderException, RemoteException {
 		return getMessage(getTypeUserMessage(), new Integer(messageId));
 	}
 
+	@Override
 	public int getNumberOfMessages(User user) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().getNumberOfMessages(user, validStatuses);
 	}
 
+	@Override
 	public int getNumberOfNewMessages(User user) throws IDOException {
 		try {
 			String[] validStatuses = { getCaseStatusOpen().getStatus() };
@@ -138,52 +146,63 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
+	@Override
 	public int getNumberOfMessages(User user, Collection groups) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().getNumberOfMessages(user, groups, validStatuses);
 	}
 
+	@Override
 	public Collection findMessages(User user) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().findMessages(user, validStatuses);
 	}
 
+	@Override
 	public Collection findMessages(User user, int numberOfEntries, int startingEntry) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().findMessages(user, validStatuses, numberOfEntries, startingEntry);
 	}
 
+	@Override
 	public Collection findMessages(User user, Collection groups, int numberOfEntries, int startingEntry) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().findMessages(user, groups, validStatuses, numberOfEntries, startingEntry);
 	}
 
+	@Override
 	public Collection findMessages(Group group) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().findMessages(group, validStatuses);
 	}
 
+	@Override
 	public Collection findMessages(Group group, int numberOfEntries, int startingEntry) throws Exception {
 		String[] validStatuses = { getCaseStatusOpen().getStatus(), getCaseStatusGranted().getStatus() };
 		return getUserMessageHome().findMessages(group, validStatuses, numberOfEntries, startingEntry);
 	}
 
+	@Override
 	public Message createUserMessage(User user, String subject, String body) {
 		return createUserMessage(null, user, subject, body, true);
 	}
 
+	@Override
 	public Message createUserMessage(User user, String subject, String body, boolean sendLetter) {
 		return createUserMessage(null, user, subject, body, sendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(User user, String subject, Group handler, String body, boolean sendLetter) {
 		return createUserMessage(null, user, null, handler, subject, body, sendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(User user, String subject, Group handler, String body, boolean sendLetter, String contentCode) {
 		return createUserMessage(null, user, null, handler, subject, body, sendLetter, contentCode, false);
 	}
 
+	@Override
 	public Message createUserMessage(User receiver, String subject, String body, User sender, boolean sendLetter) {
 		return createUserMessage(null, receiver, sender, subject, body, sendLetter);
 	}
@@ -196,42 +215,52 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return createUserMessage(parentCase, receiver, null, subject, body, sendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, String subject, String body, boolean sendLetter, boolean alwaysSendLetter) {
 		return createUserMessage(parentCase, receiver, null, null, subject, body, sendLetter, null, alwaysSendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, String subject, String body, String letterBody, boolean sendLetter, boolean alwaysSendLetter) {
 		return createUserMessage(parentCase, receiver, null, null, subject, body, letterBody, sendLetter, null, alwaysSendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, String subject, String body, String letterBody, File attachment, boolean sendLetter, boolean alwaysSendLetter) {
 		return createUserMessage(parentCase, receiver, null, null, subject, body, letterBody, attachment, sendLetter, null, alwaysSendLetter, true);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, String subject, String body, boolean sendLetter) {
 		return createUserMessage(parentCase, receiver, sender, null, subject, body, sendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, boolean sendLetter) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, sendLetter, null, false);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, boolean pSendLetterIfNoEmail, String contentCode) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, pSendLetterIfNoEmail, contentCode, false);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, boolean pSendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, body, pSendLetterIfNoEmail, contentCode, alwaysSendLetter);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, boolean pSendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, pSendLetterIfNoEmail, contentCode, alwaysSendLetter, true);
 	}
 
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, null, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
 	}
 
+	@Override
 	public MessageValue createUserMessageValue(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
 		MessageValue value = new MessageValue();
 		setSimpleMessage(value, parentCase, receiver, subject, body);
@@ -245,13 +274,15 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		value.setAttachment(attachment);
 		return value;
 	}
-	
+
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
-		
+
 		MessageValue mv = createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
 		return createUserMessage(mv);
 	}
 
+	@Override
 	public Message createUserMessage(MessageValue msgValue) {
 
 		try {
@@ -355,13 +386,14 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * This property is for setting if to create letter messages even when the
 	 * user has an email address.
-	 * 
+	 *
 	 * @return value of the set property. Default is false.
 	 */
 	protected boolean getIfCreateLetterMessageHavingEmail() {
 		return getBundle().getBooleanProperty("create_letter_message_having_email", false);
 	}
 
+	@Override
 	public Message createUserMessage(int userID, String subject, String body) throws CreateException {
 		User user;
 		try {
@@ -377,6 +409,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * @return Collection of PrintedLetterMessage that have already been printed
 	 */
+	@Override
 	public Collection getPrintedLetterMessages() throws FinderException {
 		return getPrintedLetterMessageHome().findAllPrintedLetters();
 	}
@@ -384,6 +417,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * @return Collection of PrintedLetterMessage that have already been printed
 	 */
+	@Override
 	public Collection getPrintedLetterMessagesByType(String type, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findPrintedLettersByType(type, resultSize, startingIndex);
 	}
@@ -392,10 +426,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	 * @return Collection of PrintedLetterMessage that have already been printed,
 	 *         created between dates
 	 */
+	@Override
 	public Collection getPrintedLetterMessagesByType(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findPrintedLettersByType(type, from, to, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getSinglePrintedLetterMessagesByType(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findSinglePrintedLettersByType(type, from, to, resultSize, startingIndex);
 	}
@@ -403,6 +439,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * @return Collection of PrintedLetterMessage that have not been printed
 	 */
+	@Override
 	public Collection getUnPrintedLetterMessages() throws FinderException {
 		return getPrintedLetterMessageHome().findAllUnPrintedLetters();
 	}
@@ -410,6 +447,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * @return Collection of PrintedLetterMessage that have not been printed
 	 */
+	@Override
 	public Collection getUnPrintedLetterMessagesByType(String type, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findUnPrintedLettersByType(type, resultSize, startingIndex);
 	}
@@ -417,55 +455,65 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * @return Collection of PrintedLetterMessage that have not been printed
 	 */
+	@Override
 	public Collection getUnPrintedLetterMessagesByType(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findUnPrintedLettersByType(type, from, to, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getSingleUnPrintedLetterMessagesByType(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findSingleUnPrintedLettersByType(type, from, to, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getSingleLettersByTypeAndStatus(String type, String status, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findSingleByTypeAndStatus(type, status, from, to, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getLettersByBulkFile(int file, String type, String status, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findByBulkFile(file, type, status, resultSize, startingIndex);
 	}
 
 	/**
 	 * Mark the status of the message so that it is printed.
-	 * 
+	 *
 	 * @param performer
 	 *          The User that makes the change
 	 * @param message
 	 *          the message to be marked
 	 */
+	@Override
 	public void flagPrintedLetterAsPrinted(User performer, PrintedLetterMessage message) {
 		String newCaseStatus = getCaseStatusReady().getStatus();
 		super.changeCaseStatus(message, newCaseStatus, performer);
 	}
 
+	@Override
 	public void flagMessageAsPrinted(User performer, Message message) {
 		String newCaseStatus = getCaseStatusReady().getStatus();
 		super.changeCaseStatus(message, newCaseStatus, performer);
 	}
 
+	@Override
 	public void flagMessageAsUnPrinted(User performer, Message message) {
 		String newCaseStatus = getCaseStatusOpen().getStatus();
 		super.changeCaseStatus(message, newCaseStatus, performer);
 	}
 
+	@Override
 	public void flagMessageWithStatus(User performer, Message message, String status) {
 		super.changeCaseStatus(message, status, performer);
 	}
 
+	@Override
 	public void flagMessagesWithStatus(User performer, String[] msgKeys, String status) throws FinderException {
 		for (int i = 0; i < msgKeys.length; i++) {
 			super.changeCaseStatus(Integer.parseInt(msgKeys[i]), status, performer);
 		}
 	}
 
+	@Override
 	public Message createPrintArchivationMessage(User user, String subject, String body) throws CreateException, RemoteException {
 		MessageValue msgValue = new MessageValue();
 		msgValue.setReceiver(user);
@@ -475,6 +523,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return message;
 	}
 
+	@Override
 	public Message createPrintArchivationMessage(int userID, String subject, String body) throws CreateException, RemoteException {
 		User user;
 		try {
@@ -487,6 +536,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return createPrintArchivationMessage(user, subject, body);
 	}
 
+	@Override
 	public PrintedLetterMessage createPrintedPasswordLetterMessage(User user, String subject, String body) throws CreateException {
 		PrintedLetterMessageHome home = getPrintedLetterMessageHome();
 		PrintedLetterMessage message = (PrintedLetterMessage) home.create();
@@ -503,6 +553,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return message;
 	}
 
+	@Override
 	public PrintedLetterMessage createPasswordMessage(User user, String username, String password) throws CreateException {
 		PrintedLetterMessageHome home = getPrintedLetterMessageHome();
 		PrintedLetterMessage message = (PrintedLetterMessage) home.create();
@@ -543,6 +594,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return message;
 	}
 
+	@Override
 	public Message createPrintedLetterMessage(int userID, String subject, String body) throws CreateException {
 		try {
 			MessageValue msgValue = new MessageValue();
@@ -556,10 +608,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
+	@Override
 	public void sendMessage(String email, String subject, String body) {
 		sendMessage(email, subject, body, null);
 	}
 
+	@Override
 	public void sendMessage(String email, String subject, String body, File attachment) {
 		String receiver = email.trim();
 		String mailServer = MessagingSettings.DEFAULT_SMTP_MAILSERVER;
@@ -592,16 +646,10 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			System.out.println("receiver: " + receiver);
 			System.out.println("subject: " + subject);
 		}
-		
+
 		try {
-			if (attachment == null) {
-				com.idega.util.SendMail.send(fromAddress, receiver, "", bccReceiver, mailServer, subject, body);
-			}
-			else {
-				com.idega.util.SendMail.send(fromAddress, receiver, "", bccReceiver, mailServer, subject, body, attachment);
-			}
-		}
-		catch (javax.mail.MessagingException me) {
+			SendMail.send(fromAddress, receiver, "", bccReceiver, mailServer, subject, body, attachment);
+		} catch (MessagingException me) {
 			System.err.println("Error sending mail to address: " + email + " Message was: " + me.getMessage());
 		}
 	}
@@ -622,6 +670,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
+	@Override
 	public boolean getIfUserPreferesMessageByEmail(User user) {
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
@@ -640,6 +689,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return true;
 	}
 
+	@Override
 	public boolean getIfUserPreferesMessageInMessageBox(User user) {
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
@@ -657,10 +707,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return true;
 	}
 
+	@Override
 	public boolean getIfCanSendEmail() {
 		return Boolean.valueOf(getPropertyValue(MessageConstants.CAN_SEND_EMAIL, Boolean.FALSE.toString())).booleanValue();
 	}
 
+	@Override
 	public void setIfUserPreferesMessageByEmail(User user, boolean preference) {
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
@@ -673,6 +725,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
+	@Override
 	public void setIfUserPreferesMessageInMessageBox(User user, boolean preference) {
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
@@ -703,6 +756,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return (UserBusiness) getServiceInstance(UserBusiness.class);
 	}
 
+	@Override
 	public MessageSession getMessageSession(IWUserContext iwuc) throws IBOLookupException {
 		return (MessageSession) getSessionInstance(iwuc, MessageSession.class);
 	}
@@ -712,6 +766,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return IW_BUNDLE_IDENTIFIER;
 	}
 
+	@Override
 	public MessageHandlerInfo createMessageHandlerInfo(MessagePdfHandler handler, ICObject ico) throws CreateException, RemoteException {
 		MessageHandlerInfoHome mhhome = (MessageHandlerInfoHome) getIDOHome(MessageHandlerInfo.class);
 		MessageHandlerInfo info = mhhome.create();
@@ -721,6 +776,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		return info;
 	}
 
+	@Override
 	public void setMessageFile(PrintMessage msg, boolean flagPrinted, User performer, ICFile file) {
 		msg.setMessageData(file);
 
@@ -736,7 +792,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	/**
 	 * Gets the value for a property name ... replaces the bundle properties that
 	 * were used previously
-	 * 
+	 *
 	 * @param propertyName
 	 * @return
 	 */
