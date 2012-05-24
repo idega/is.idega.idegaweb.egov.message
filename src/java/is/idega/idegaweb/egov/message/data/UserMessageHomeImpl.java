@@ -209,5 +209,15 @@ public class UserMessageHomeImpl extends IDOFactory implements UserMessageHome {
         return this.getEntityCollectionForPrimaryKeys(ids);
 
 	}
+	
+	
+	public Collection<Message>  findMessagesForUser(User user, String status,Boolean read)
+			throws FinderException {
+		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
+        Collection<Integer> ids = ((UserMessageBMPBean) entity).ejbFindByUser(user, status, read);
+        this.idoCheckInPooledEntity(entity);
+        return this.getEntityCollectionForPrimaryKeys(ids);
+
+	}
 
 }

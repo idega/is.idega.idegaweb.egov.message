@@ -13,6 +13,8 @@ import java.util.Collection;
 
 import javax.ejb.FinderException;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.idega.block.process.message.data.Message;
 import com.idega.data.IDOException;
 import com.idega.data.IDOFactory;
@@ -360,5 +362,10 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 	public Collection  <Message> findMessages(User user, String caseId)
 			throws FinderException {
 		return null;
+	}
+	
+	public Collection<Message> findMessagesForUser(User user, String status,Boolean read) throws FinderException{
+		//TODO: implement
+		throw new NotImplementedException("Only on usermessages for now");
 	}
 }
