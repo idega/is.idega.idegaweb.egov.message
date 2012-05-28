@@ -145,9 +145,9 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 		query.addCriteria(this.idoCriteriaForParentCase(caseId));
 		return super.idoFindPKsByQuery(query);
 	}
-	
+
 	public Collection<Integer> ejbFindByUser(User user, String status,Boolean read) throws FinderException{
-		return ejbFindCases(user, status, null, read);
+		return super.ejbFindCases(user, status, null, read);
 	}
 
 	public int ejbHomeGetNumberOfMessagesByStatus(User user, String[] status) throws IDOException {
