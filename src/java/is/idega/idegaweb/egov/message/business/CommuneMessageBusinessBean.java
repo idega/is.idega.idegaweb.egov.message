@@ -21,6 +21,8 @@ import is.idega.idegaweb.egov.message.data.UserMessageHome;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
@@ -54,6 +56,8 @@ import com.idega.user.business.UserBusiness;
 import com.idega.user.business.UserProperties;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
+import com.idega.util.CoreConstants;
+import com.idega.util.CoreUtil;
 import com.idega.util.IWTimestamp;
 import com.idega.util.SendMail;
 
@@ -62,6 +66,10 @@ import com.idega.util.SendMail;
  * @version 1.0
  */
 public class CommuneMessageBusinessBean extends MessageBusinessBean implements CommuneMessageBusiness, MessageBusiness {
+
+	private static final long serialVersionUID = -6310730647861930693L;
+
+	private static final Logger LOGGER = Logger.getLogger(CommuneMessageBusinessBean.class.getName());
 
 	private final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.egov.message";
 	public static final String MESSAGE_PROPERTIES = "message_properties";
@@ -73,7 +81,6 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	public CommuneMessageBusinessBean() {
 		MessageTypeManager typeManager = MessageTypeManager.getInstance();
 		typeManager.addDataClassForType(MessageConstants.TYPE_USER_MESSAGE, UserMessage.class);
-		// typeManager.addDataClassForType(MessageConstants.TYPE_SYSTEM_PRINT_MAIL_MESSAGE, PrintedLetterMessage.class);
 	}
 
 	private UserMessageHome getUserMessageHome() throws RemoteException {
@@ -340,12 +347,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 			// debug
 			if (IWMainApplication.isDebugActive()) {
-				System.out.println("[MessageBusiness] Creating user message with subject:" + msgValue.getSubject());
-				System.out.println("[MessageBusiness] Body: " + msgValue.getBody());
+				LOGGER.info("[MessageBusiness] Creating user message with subject:" + msgValue.getSubject());
+				LOGGER.info("[MessageBusiness] Body: " + msgValue.getBody());
 				if (msgValue.getParentCase() != null) {
 					debug("[MessageBusiness] Parent case:" + msgValue.getParentCase().getClass().getName() + " (" + msgValue.getParentCase().getPrimaryKey().toString() + ")");
 				}
-				System.out.println("[MessageBusiness] Receiver: " + msgValue.getReceiver().getName() + " (" + msgValue.getReceiver().getPrimaryKey().toString() + ")");
+				LOGGER.info("[MessageBusiness] Receiver: " + msgValue.getReceiver().getName() + " (" + msgValue.getReceiver().getPrimaryKey().toString() + ")");
 				if (msgValue.getSender() != null) {
 					debug("[MessageBusiness] Sender: " + msgValue.getSender().getName() + " (" + msgValue.getSender().getPrimaryKey().toString() + ")");
 				}
@@ -625,10 +632,8 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			fromAddress = getPropertyValue(MessagingSettings.PROP_MESSAGEBOX_FROM_ADDRESS, MessagingSettings.DEFAULT_MESSAGEBOX_FROM_ADDRESS);
 			forcedToAddress = getPropertyValue(MessagingSettings.PROP_SYSTEM_FORCED_RECEIVER, "notset");
 			bccReceiver = getPropertyValue(MessagingSettings.PROP_SYSTEM_BCC_RECEIVER, "notset");
-		}
-		catch (Exception e) {
-			System.err.println("MessageBusinessBean: Error getting mail property from bundle");
-			e.printStackTrace();
+		} catch (Exception e) {
+			LOGGER.log(Level.WARNING, "MessageBusinessBean: Error getting mail property from bundle", e);
 		}
 
 		if (forcedToAddress != null && !"notset".equals(forcedToAddress)) {
@@ -640,17 +645,19 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 
 		if (IWMainApplication.isDebugActive()) {
-			System.out.println("sending message in commune message business");
-			System.out.println("mailServer: " + mailServer);
-			System.out.println("fromAddress: " + fromAddress);
-			System.out.println("receiver: " + receiver);
-			System.out.println("subject: " + subject);
+			LOGGER.info("sending message in commune message business");
+			LOGGER.info("mailServer: " + mailServer);
+			LOGGER.info("fromAddress: " + fromAddress);
+			LOGGER.info("receiver: " + receiver);
+			LOGGER.info("subject: " + subject);
 		}
 
 		try {
-			SendMail.send(fromAddress, receiver, "", bccReceiver, mailServer, subject, body, attachment);
+			SendMail.send(fromAddress, receiver, CoreConstants.EMPTY, bccReceiver, mailServer, subject, body, attachment);
 		} catch (MessagingException me) {
-			System.err.println("Error sending mail to address: " + email + " Message was: " + me.getMessage());
+			String message = "Error sending mail to address: " + email + ". Message was:\n" + me.getMessage();
+			LOGGER.log(Level.WARNING, message, me);
+			CoreUtil.sendExceptionNotification(message, me);
 		}
 	}
 
