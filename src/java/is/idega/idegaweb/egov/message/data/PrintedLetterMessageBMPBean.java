@@ -22,12 +22,13 @@ import com.idega.util.IWTimestamp;
 
 /**
  * Title: Description: Copyright: Copyright (c) 2002 Company:
- * 
+ *
  * @author Anders Lindman
  * @version 1.0
  */
-public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements PrintedLetterMessage, PrintMessage,
-		Case {
+public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements PrintedLetterMessage, PrintMessage, Case {
+
+	private static final long serialVersionUID = -3476359538719379553L;
 
 	private static final String COLUMN_SUBJECT = "SUBJECT";
 
@@ -79,18 +80,22 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		setLetterType(MessageConstants.LETTER_TYPE_DEFAULT);
 	}
 
+	@Override
 	public User getSender() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void setSender(User sender) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int getSenderID() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void setSenderID(int senderID) {
 		throw new UnsupportedOperationException();
 	}
@@ -115,69 +120,84 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return this.getStringColumnValue(COLUMN_BODY);
 	}
 
+	@Override
 	public String getMessageType() {
 		return this.getStringColumnValue(COLUMN_MESSAGE_TYPE);
 	}
 
+	@Override
 	public boolean isPrinted() {
 		return this.getCaseStatus().getStatus().equals(getCaseStatusReady());
 	}
 
+	@Override
 	public void setMessageType(String type) {
 		this.setColumn(COLUMN_MESSAGE_TYPE, type);
 	}
 
+	@Override
 	public ICFile getMessageData() {
 		return (ICFile) this.getColumnValue(COLUMN_MESSAGE_DATA); // Replace this
 																															// later
 	}
 
+	@Override
 	public int getMessageDataFileID() {
 		return this.getIntColumnValue(COLUMN_MESSAGE_DATA);
 	}
 
+	@Override
 	public void setMessageData(ICFile file) { // Temp (test) method
 		this.setColumn(COLUMN_MESSAGE_DATA, file);
 	}
 
+	@Override
 	public void setMessageData(int fileID) { // Temp (test) method
 		this.setColumn(COLUMN_MESSAGE_DATA, fileID);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see se.idega.idegaweb.commune.message.data.PrintMessage#getContentType()
 	 */
+	@Override
 	public String getContentCode() {
 		return this.getStringColumnValue(COLUMN_CONTENT_CODE);
 	}
 
+	@Override
 	public void setContentCode(String contentCode) {
 		this.setColumn(COLUMN_CONTENT_CODE, contentCode);
 	}
 
+	@Override
 	public ICFile getMessageBulkData() {
 		return (ICFile) this.getColumnValue(COLUMN_BULK_DATA); // Replace this
 																														// later
 	}
 
+	@Override
 	public int getMessageBulkDataFileID() {
 		return this.getIntColumnValue(COLUMN_BULK_DATA);
 	}
 
+	@Override
 	public void setMessageBulkData(ICFile file) { // Temp (test) method
 		this.setColumn(COLUMN_BULK_DATA, file);
 	}
 
+	@Override
 	public void setMessageBulkData(int fileID) { // Temp (test) method
 		this.setColumn(COLUMN_BULK_DATA, fileID);
 	}
 
+	@Override
 	public String getSenderName() {
 		return getOwner().getName();
 	}
 
+	@Override
 	public String getDateString() {
 		/**
 		 * @todo: implement
@@ -185,14 +205,17 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return "";
 	}
 
+	@Override
 	public void setLetterType(String letterType) {
 		setColumn(COLUMN_LETTER_TYPE, letterType);
 	}
 
+	@Override
 	public String getLetterType() {
 		return getStringColumnValue(COLUMN_LETTER_TYPE);
 	}
 
+	@Override
 	public void setAsPasswordLetter() {
 		setLetterType(MessageConstants.LETTER_TYPE_PASSWORD);
 	}
@@ -221,10 +244,12 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return idoSelectQueryGetLettersCountByStatusAndType(caseStatus, COLUMN_LETTER_TYPE);
 	}
 
+	@Override
 	public String getUnPrintedCaseStatusForType(String type) {
 		return getCaseStatusOpen();
 	}
 
+	@Override
 	public String getPrintedCaseStatusForType(String type) {
 		return getCaseStatusReview();
 	}
@@ -493,6 +518,7 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return ejbFindPrintedLettersByType(letterType, resultSize, startingIndex);
 	}
 
+	@Override
 	public String getPrintType() {
 		return getMessageType();
 	}
@@ -620,15 +646,18 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return super.ejbHomeGetCountCasesByUserAndStatusArray(user, status);
 	}
 
+	@Override
 	public void addSubscriber(User subscriber)
 			throws IDOAddRelationshipException {
 		throw new UnsupportedOperationException("This method is not implemented!");
 	}
 
+	@Override
 	public Collection<User> getSubscribers() {
 		throw new UnsupportedOperationException("This method is not implemented!");
 	}
 
+	@Override
 	public void removeSubscriber(User subscriber)
 			throws IDORemoveRelationshipException {
 		throw new UnsupportedOperationException("This method is not implemented!");
