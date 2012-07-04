@@ -375,7 +375,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 				String emailAddress = mail.getEmailAddress();
 				if (emailAddress != null) {
 					try {
-						sendMessage(emailAddress, msgValue.getSubject(), msgValue.getBody(), msgValue.getAttachment());
+						sendMessage(emailAddress, msgValue.getBcc() != null && msgValue.getBcc().length() > 0 ? msgValue.getBcc() : null, msgValue.getSubject(), msgValue.getBody(), msgValue.getAttachment());
 						return true;
 					}
 					catch (Exception ex) {
@@ -617,11 +617,19 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public void sendMessage(String email, String subject, String body) {
-		sendMessage(email, subject, body, null);
+		sendMessage(email, null, subject, body, null);
 	}
 
+	public void sendMessage(String email, String bcc, String subject, String body) {
+		sendMessage(email, bcc, subject, body, null);
+	}
+	
 	@Override
 	public void sendMessage(String email, String subject, String body, File attachment) {
+		sendMessage(email, null, subject, body, attachment);
+	}
+	
+	public void sendMessage(String email, String bcc, String subject, String body, File attachment) {
 		String receiver = email.trim();
 		String mailServer = MessagingSettings.DEFAULT_SMTP_MAILSERVER;
 		String fromAddress = MessagingSettings.DEFAULT_MESSAGEBOX_FROM_ADDRESS;
@@ -642,6 +650,9 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 		if ("notset".equals(bccReceiver)) {
 			bccReceiver = null;
+		}
+		if (bcc != null) {
+			bccReceiver = bcc;
 		}
 
 		if (IWMainApplication.isDebugActive()) {

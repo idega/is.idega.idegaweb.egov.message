@@ -28,6 +28,7 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
    private Boolean sendMail;
    private String printedLetterType;
    private File attachment = null;
+   private String bcc;
 	
 	public Boolean getAlwaysSendLetter() {
 		return this.alwaysSendLetter;
@@ -85,6 +86,14 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 	
 	public void setAttachment(File attachment) {
 		this.attachment = attachment;
+	}
+
+	public String getBcc() {
+		return bcc;
+	}
+
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
 	}
 
 }
