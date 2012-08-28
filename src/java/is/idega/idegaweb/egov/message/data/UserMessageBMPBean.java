@@ -7,9 +7,7 @@ import javax.ejb.FinderException;
 import com.idega.block.process.data.AbstractCaseBMPBean;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.message.data.Message;
-import com.idega.data.IDOAddRelationshipException;
 import com.idega.data.IDOException;
-import com.idega.data.IDORemoveRelationshipException;
 import com.idega.data.query.SelectQuery;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
@@ -22,6 +20,8 @@ import com.idega.user.data.User;
  */
 
 public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessage, Message, Case {
+
+	private static final long serialVersionUID = 6046551291844846469L;
 
 	private static final String COLUMN_SUBJECT = "SUBJECT";
 	private static final String COLUMN_BODY = "BODY";
@@ -195,23 +195,5 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 	public int ejbHomeGetNumberOfMessages(com.idega.user.data.User user, java.util.Collection groups, String[] status) throws IDOException {
 		return super.ejbHomeGetCountCasesByUserAndGroupsAndStatusArray(user, groups, status);
 	}
-
-	@Override
-	public void addSubscriber(User subscriber)
-			throws IDOAddRelationshipException {
-		throw new UnsupportedOperationException("This method is not implemented!");
-	}
-
-	@Override
-	public Collection<User> getSubscribers() {
-		throw new UnsupportedOperationException("This method is not implemented!");
-	}
-
-	@Override
-	public void removeSubscriber(User subscriber)
-			throws IDORemoveRelationshipException {
-		throw new UnsupportedOperationException("This method is not implemented!");
-	}
-
 
 }

@@ -8,9 +8,7 @@ import javax.ejb.FinderException;
 import com.idega.block.process.data.AbstractCaseBMPBean;
 import com.idega.block.process.data.Case;
 import com.idega.core.file.data.ICFile;
-import com.idega.data.IDOAddRelationshipException;
 import com.idega.data.IDOException;
-import com.idega.data.IDORemoveRelationshipException;
 import com.idega.data.IDORuntimeException;
 import com.idega.data.query.Criteria;
 import com.idega.data.query.InCriteria;
@@ -646,20 +644,4 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return super.ejbHomeGetCountCasesByUserAndStatusArray(user, status);
 	}
 
-	@Override
-	public void addSubscriber(User subscriber)
-			throws IDOAddRelationshipException {
-		throw new UnsupportedOperationException("This method is not implemented!");
-	}
-
-	@Override
-	public Collection<User> getSubscribers() {
-		throw new UnsupportedOperationException("This method is not implemented!");
-	}
-
-	@Override
-	public void removeSubscriber(User subscriber)
-			throws IDORemoveRelationshipException {
-		throw new UnsupportedOperationException("This method is not implemented!");
-	}
 }
