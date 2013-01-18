@@ -11,7 +11,6 @@ package is.idega.idegaweb.egov.message.business;
 
 import java.io.File;
 
-
 /**
  * 
  *  Last modified: $Date$ by $Author$
@@ -77,13 +76,11 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 	public void setSendMail(Boolean sendMail) {
 		this.sendMail = sendMail;
 	}
-
 	
 	public File getAttachment() {
 		return this.attachment;
 	}
 
-	
 	public void setAttachment(File attachment) {
 		this.attachment = attachment;
 	}
@@ -94,6 +91,10 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 
 	public void setBcc(String bcc) {
 		this.bcc = bcc;
+	}
+	
+	public String toString() {
+		return "To: " + getReceiver() + ", from: " + getSender() + ", subject: " + getSubject() + ", message: " + getLetterBody();
 	}
 
 }
