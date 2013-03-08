@@ -40,12 +40,12 @@
       <artifactId>com.idega.block.pdf</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.itextpdf</groupId>
-      <artifactId>itextpdf</artifactId>
+      <groupId>itextpdf</groupId>
+      <artifactId>itext-paulo</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.itextpdf.tool</groupId>
-      <artifactId>xmlworker</artifactId>
+      <groupId>itext</groupId>
+      <artifactId>itext-xml</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
