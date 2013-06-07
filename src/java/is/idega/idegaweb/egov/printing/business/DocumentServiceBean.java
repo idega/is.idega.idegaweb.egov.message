@@ -31,6 +31,7 @@ import com.idega.business.IBOServiceBean;
 import com.idega.core.file.data.ICFile;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.core.file.util.MimeTypeUtil;
+import com.idega.core.location.data.Address;
 import com.idega.idegaweb.IWUserContext;
 import com.idega.io.MemoryFileBuffer;
 import com.idega.io.MemoryInputStream;
@@ -123,21 +124,23 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 				InputStream mis = new MemoryInputStream(buffer);
 
 				PrintingContext pcx = getPrintingContext(iwuc, msg);
-				pcx.setDocumentStream(mos);
-				pserv.printDocument(pcx);
-
-				PdfReader reader = new PdfReader(buffer.buffer());
-				PdfImportedPage page;
-				int n = reader.getNumberOfPages();
-				for (int i = 0; i < n;) {
-					++i;
-					page = writer.getImportedPage(reader, i);
-					writer.addPage(page);
+				if (pcx != null) {
+					pcx.setDocumentStream(mos);
+					pserv.printDocument(pcx);
+	
+					PdfReader reader = new PdfReader(buffer.buffer());
+					PdfImportedPage page;
+					int n = reader.getNumberOfPages();
+					for (int i = 0; i < n;) {
+						++i;
+						page = writer.getImportedPage(reader, i);
+						writer.addPage(page);
+					}
+					lettersProcessed++;
+					storeStreamToICFile(iwuc, msgBuiz, msg, mis, fileName, buffer.length(), flagPrinted);
+					msg.setMessageBulkData(bulkFile);
+					msg.store();
 				}
-				lettersProcessed++;
-				storeStreamToICFile(iwuc, msgBuiz, msg, mis, fileName, buffer.length(), flagPrinted);
-				msg.setMessageBulkData(bulkFile);
-				msg.store();
 			}
 			document.close();
 			bulkFile = createFile(bulkFile, fileName, outerIs, outerBuf.length());
@@ -170,7 +173,14 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 		if (msg instanceof PrintedLetterMessage) {
 			PrintedLetterMessage pmsg = (PrintedLetterMessage) msg;
 			if (pmsg.getLetterType().equals(MessageConstants.LETTER_TYPE_PASSWORD)) {
-				return new PasswordLetterContext(iwuc, msg);
+				PasswordLetterContext context = new PasswordLetterContext(iwuc, msg);
+				
+				Address address = (Address) context.getDocumentProperties().get("address");
+				if (address == null) {
+					return null;
+				}
+				
+				return context;
 			}
 			else if (pmsg.getLetterType().equals(MessageConstants.LETTER_TYPE_DEFAULT)) {
 				return new DefaultLetterContext(iwuc, msg);
