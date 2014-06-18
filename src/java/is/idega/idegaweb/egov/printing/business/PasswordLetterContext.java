@@ -15,31 +15,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-
 import com.idega.block.process.message.data.Message;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.idegaweb.IWMainApplicationSettings;
 import com.idega.idegaweb.IWUserContext;
 import com.idega.xml.XMLDocument;
 import com.idega.xml.XMLElement;
 
 /**
- * 
+ *
  *  Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:aron@idega.com">aron</a>
  * @version $Revision$
  */
 public class PasswordLetterContext extends MessageLetterContext {
-    
+
     public PasswordLetterContext(IWUserContext iwac ,Message msg){
         super(iwac,msg);
         init(iwac,msg);
     }
-    
+
     private void init(IWUserContext iwuc,Message msg){
-        Map props = new HashMap();
+        Map<String, String> props = new HashMap<String, String>();
         if (msg.getBody().indexOf("|") > 0) {
 			StringTokenizer tokenizer = new StringTokenizer(msg.getBody(), "|");
-			
+
 			if (tokenizer.hasMoreTokens()) {
 			    props.put("username",tokenizer.nextToken());
 			}
@@ -48,6 +49,11 @@ public class PasswordLetterContext extends MessageLetterContext {
 			}
 
 		}
+
+        IWMainApplicationSettings settings = IWMainApplication.getDefaultIWMainApplication().getSettings();
+        props.put("signature", settings.getProperty("citizen.mayor.signature.url", "https://rafraen.reykjavik.is/content/files/public/signatures/dagur.gif"));
+        props.put("mayorName", settings.getProperty("citizen.mayor.name", "Dagur B. Eggertsson"));
+
         addDocumentProperties(props);
         setResourceDirectory(new File(getResourceUrl(getBundle(iwuc),iwuc.getCurrentLocale())));
         try {
@@ -56,11 +62,12 @@ public class PasswordLetterContext extends MessageLetterContext {
             e.printStackTrace();
         }
     }
-    
+
     /* (non-Javadoc)
      * @see se.idega.idegaweb.commune.printing.business.MessageLetterContext#getTemplateXMLDocument()
      */
-    protected XMLDocument getTemplateXMLDocument() {
+    @Override
+	protected XMLDocument getTemplateXMLDocument() {
         XMLDocument doc =  super.getBasicXMLDocument();
         XMLElement root = doc.getRootElement();
         XMLElement pass = new XMLElement("paragraph");
@@ -69,6 +76,6 @@ public class PasswordLetterContext extends MessageLetterContext {
         root.addContent(pass);
         return doc;
     }
-    
-    
+
+
 }
