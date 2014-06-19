@@ -51,7 +51,7 @@ public class PasswordLetterContext extends MessageLetterContext {
 		}
 
         IWMainApplicationSettings settings = IWMainApplication.getDefaultIWMainApplication().getSettings();
-        props.put("signature", settings.getProperty("citizen.mayor.signature.url", "https://rafraen.reykjavik.is/content/files/public/signatures/dagur.gif"));
+        props.put("signature", settings.getProperty("citizen.mayor.signature.file.name", "signature_dagur_2014.gif"));
         props.put("mayorName", settings.getProperty("citizen.mayor.name", "Dagur B. Eggertsson"));
 
         addDocumentProperties(props);
@@ -76,6 +76,5 @@ public class PasswordLetterContext extends MessageLetterContext {
         root.addContent(pass);
         return doc;
     }
-
 
 }
