@@ -109,10 +109,12 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	public PrintDocumentsViewer() {
 	}
 
+	@Override
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
 
+	@Override
 	public void main(IWContext iwc) {
 		// debugParameters(iwc);
 		this.setResourceBundle(getResourceBundle(iwc));
@@ -166,6 +168,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 		// statusError = msgBuiz.getCaseStatusError().getStatus();
 	}
 
+	@Override
 	public void add(PresentationObject po) {
 		if (this.mainTable == null) {
 			this.mainTable = new Table();
@@ -212,7 +215,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 		}
 
 		if ("".equals(this.currentType)) {
-			this.currentType = getDocumentBusiness(iwc).getPrintMessageTypes()[0];
+			this.currentType = getMessagesTypes(iwc)[0];
 		}
 
 		if (iwc.isParameterSet(PRM_BULK_VIEW)) {
@@ -405,7 +408,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 
 	private void addTypeMenu(IWContext iwc) throws Exception {
 
-		String[] types = getDocumentBusiness(iwc).getPrintMessageTypes();
+		String[] types = getMessagesTypes(iwc);
 		if (this.showTypesAsDropdown) {
 			DropdownMenu drp = new DropdownMenu(PARAM_LETTER_TYPE);
 			for (int i = 0; i < types.length; i++) {
@@ -1152,17 +1155,20 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	}
 
 	private CommuneMessageBusiness getMessageBusiness(IWContext iwc) throws RemoteException {
-		return (CommuneMessageBusiness) com.idega.business.IBOLookup.getServiceInstance(iwc, CommuneMessageBusiness.class);
+		return com.idega.business.IBOLookup.getServiceInstance(iwc, CommuneMessageBusiness.class);
 	}
 
-	private DocumentBusiness getDocumentBusiness(IWContext iwc) throws RemoteException {
-		return (DocumentBusiness) com.idega.business.IBOLookup.getServiceInstance(iwc, DocumentBusiness.class);
+	protected DocumentBusiness getDocumentBusiness(IWContext iwc) throws RemoteException {
+		return com.idega.business.IBOLookup.getServiceInstance(iwc, DocumentBusiness.class);
 	}
 
 	private DocumentService getDocumentService(IWContext iwc) throws RemoteException {
-		return (DocumentService) com.idega.business.IBOLookup.getServiceInstance(iwc, DocumentService.class);
+		return com.idega.business.IBOLookup.getServiceInstance(iwc, DocumentService.class);
 	}
 
+	protected String[] getMessagesTypes(IWContext iwc) throws RemoteException{
+		return getDocumentBusiness(iwc).getPrintMessageTypes();
+	}
 	/*
 	 * Commented out since it is never used... private Message getMessage(String id, IWContext iwc) throws Exception { int msgId = Integer.parseInt(id);
 	 * Message msg = getMessageBusiness(iwc).getUserMessage(msgId); return msg; }
