@@ -38,6 +38,10 @@
       <artifactId>com.idega.block.pdf</artifactId>
     </dependency>
     <dependency>
+    	<groupId>com.idega.block.addon</groupId>
+    	<artifactId>com.idega.block.email</artifactId>
+    </dependency>
+    <dependency>
       <groupId>itextpdf</groupId>
       <artifactId>itext-paulo</artifactId>
     </dependency>
