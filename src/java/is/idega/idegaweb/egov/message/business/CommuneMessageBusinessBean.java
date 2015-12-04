@@ -8,16 +8,6 @@
  */
 package is.idega.idegaweb.egov.message.business;
 
-import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
-import is.idega.idegaweb.egov.message.data.MessageHandlerInfoHome;
-import is.idega.idegaweb.egov.message.data.MessageReceiver;
-import is.idega.idegaweb.egov.message.data.MessageReceiverHome;
-import is.idega.idegaweb.egov.message.data.PrintMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
-import is.idega.idegaweb.egov.message.data.UserMessage;
-import is.idega.idegaweb.egov.message.data.UserMessageHome;
-
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -60,6 +50,16 @@ import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.util.IWTimestamp;
 import com.idega.util.SendMail;
+
+import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
+import is.idega.idegaweb.egov.message.data.MessageHandlerInfoHome;
+import is.idega.idegaweb.egov.message.data.MessageReceiver;
+import is.idega.idegaweb.egov.message.data.MessageReceiverHome;
+import is.idega.idegaweb.egov.message.data.PrintMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
+import is.idega.idegaweb.egov.message.data.UserMessage;
+import is.idega.idegaweb.egov.message.data.UserMessageHome;
 
 /**
  * @author Anders Lindman , <a href="mailto:tryggvi@idega.is">Tryggvi Larusson</a>
@@ -269,6 +269,15 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public MessageValue createUserMessageValue(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
+		return createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, null);
+	}
+
+	@Override
+	public MessageValue createUserMessageValue(Case parentCase, User receiver,
+			User sender, Group handler, String subject, String body,
+			String letterBody, File attachment, boolean sendLetterIfNoEmail,
+			String contentCode, boolean alwaysSendLetter, boolean sendMail, String bcc
+	) {
 		MessageValue value = new MessageValue();
 		setSimpleMessage(value, parentCase, receiver, subject, body);
 		value.setHandler(handler);
@@ -279,6 +288,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		value.setAlwaysSendLetter(new Boolean(alwaysSendLetter));
 		value.setSendMail(new Boolean(sendMail));
 		value.setAttachment(attachment);
+		value.setBcc(bcc);
 		return value;
 	}
 
@@ -370,7 +380,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	private boolean sendEmail(MessageValue msgValue) throws IBOLookupException, RemoteException {
 		try {
-			Email mail = ((UserBusiness) getServiceInstance(UserBusiness.class)).getUsersMainEmail(msgValue.getReceiver());
+			Email mail = getServiceInstance(UserBusiness.class).getUsersMainEmail(msgValue.getReceiver());
 			if (mail != null) {
 				String emailAddress = mail.getEmailAddress();
 				if (emailAddress != null) {
@@ -623,12 +633,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	public void sendMessage(String email, String bcc, String subject, String body) {
 		sendMessage(email, bcc, subject, body, null);
 	}
-	
+
 	@Override
 	public void sendMessage(String email, String subject, String body, File attachment) {
 		sendMessage(email, null, subject, body, attachment);
 	}
-	
+
 	public void sendMessage(String email, String bcc, String subject, String body, File attachment) {
 		String receiver = email.trim();
 		String mailServer = MessagingSettings.DEFAULT_SMTP_MAILSERVER;
@@ -771,12 +781,12 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	private UserBusiness getUserBusiness() throws RemoteException {
-		return (UserBusiness) getServiceInstance(UserBusiness.class);
+		return getServiceInstance(UserBusiness.class);
 	}
 
 	@Override
 	public MessageSession getMessageSession(IWUserContext iwuc) throws IBOLookupException {
-		return (MessageSession) getSessionInstance(iwuc, MessageSession.class);
+		return getSessionInstance(iwuc, MessageSession.class);
 	}
 
 	@Override

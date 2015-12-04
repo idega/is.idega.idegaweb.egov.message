@@ -1,27 +1,30 @@
 package is.idega.idegaweb.egov.message.business;
 
 
+import java.io.File;
+import java.rmi.RemoteException;
+import java.util.Collection;
+
+import javax.ejb.CreateException;
+import javax.ejb.FinderException;
+
+import com.idega.block.process.data.Case;
+import com.idega.block.process.data.CaseCode;
+import com.idega.block.process.message.business.MessageBusiness;
+import com.idega.block.process.message.data.Message;
+import com.idega.business.IBOLookupException;
+import com.idega.business.IBOService;
+import com.idega.core.component.data.ICObject;
 import com.idega.core.file.data.ICFile;
 import com.idega.data.IDOException;
-import com.idega.block.process.message.business.MessageBusiness;
-import com.idega.block.process.data.Case;
-import javax.ejb.CreateException;
-import com.idega.block.process.data.CaseCode;
-import is.idega.idegaweb.egov.message.data.PrintMessage;
-import com.idega.user.data.User;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
-import java.rmi.RemoteException;
-import com.idega.block.process.message.data.Message;
-import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
-import com.idega.core.component.data.ICObject;
-import com.idega.user.data.Group;
-import java.util.Collection;
-import com.idega.util.IWTimestamp;
-import javax.ejb.FinderException;
-import com.idega.business.IBOService;
-import java.io.File;
-import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.IWUserContext;
+import com.idega.user.data.Group;
+import com.idega.user.data.User;
+import com.idega.util.IWTimestamp;
+
+import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
+import is.idega.idegaweb.egov.message.data.PrintMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
 
 public interface CommuneMessageBusiness extends IBOService, MessageBusiness {
 	/**
@@ -129,6 +132,7 @@ public interface CommuneMessageBusiness extends IBOService, MessageBusiness {
 	/**
 	 * @see is.idega.idegaweb.egov.message.business.CommuneMessageBusinessBean#createUserMessage
 	 */
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver,
 			String subject, String body, boolean sendLetter)
 			throws RemoteException;
@@ -209,6 +213,12 @@ public interface CommuneMessageBusiness extends IBOService, MessageBusiness {
 			User sender, Group handler, String subject, String body,
 			String letterBody, File attachment, boolean sendLetterIfNoEmail,
 			String contentCode, boolean alwaysSendLetter, boolean sendMail)
+			throws RemoteException;
+
+	public MessageValue createUserMessageValue(Case parentCase, User receiver,
+			User sender, Group handler, String subject, String body,
+			String letterBody, File attachment, boolean sendLetterIfNoEmail,
+			String contentCode, boolean alwaysSendLetter, boolean sendMail, String bcc)
 			throws RemoteException;
 
 	/**
