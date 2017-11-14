@@ -329,10 +329,14 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 					if (!sendEmail(msgValue)) {
 						// failed to send this email
 						doSendLetter |= msgValue.getSendLetterIfNoEmail().booleanValue();
+						getLogger().info("Failed to send email to " + msgValue.getReceiver() + " about " + msgValue);
 					}
+				} else {
+					getLogger().info("Not sending email to " + msgValue.getReceiver() + " about " + msgValue);
 				}
 			}
 			else {
+				getLogger().info("Can not send email at all to " + msgValue.getReceiver() + " about " + msgValue);
 				// can not send emails at all
 				doSendLetter |= msgValue.getSendLetterIfNoEmail().booleanValue();
 			}
@@ -389,13 +393,13 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 						return true;
 					}
 					catch (Exception ex) {
-						System.err.println("Couldn't send message to user via e-mail.");
+						getLogger().log(Level.WARNING, "Couldn't send message to user (" + emailAddress + ") via e-mail.", ex);
 					}
 				}
 			}
 		}
 		catch (NoEmailFoundException e) {
-			System.err.println(e.getMessage());
+			getLogger().log(Level.WARNING, "Couldn't send message (" + msgValue + ") to user via e-mail.", e);
 		}
 		return false;
 	}
