@@ -48,6 +48,7 @@ import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
+import com.idega.util.EmailValidator;
 import com.idega.util.IWTimestamp;
 import com.idega.util.SendMail;
 
@@ -383,23 +384,26 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	private boolean sendEmail(MessageValue msgValue) throws IBOLookupException, RemoteException {
+		String emailAddress = null;
 		try {
 			Email mail = getServiceInstance(UserBusiness.class).getUsersMainEmail(msgValue.getReceiver());
 			if (mail != null) {
-				String emailAddress = mail.getEmailAddress();
-				if (emailAddress != null) {
-					try {
-						sendMessage(emailAddress, msgValue.getBcc() != null && msgValue.getBcc().length() > 0 ? msgValue.getBcc() : null, msgValue.getSubject(), msgValue.getBody(), msgValue.getAttachment());
-						return true;
-					}
-					catch (Exception ex) {
-						getLogger().log(Level.WARNING, "Couldn't send message to user (" + emailAddress + ") via e-mail.", ex);
-					}
-				}
+				emailAddress = mail.getEmailAddress();
 			}
+		} catch (NoEmailFoundException e) {
+			getLogger().warning("Couldn't find email for " + msgValue.getReceiver());
 		}
-		catch (NoEmailFoundException e) {
-			getLogger().log(Level.WARNING, "Couldn't send message (" + msgValue + ") to user via e-mail.", e);
+		if (!EmailValidator.getInstance().isValid(emailAddress)) {
+			emailAddress = msgValue.getEmailAddress();
+		}
+
+		if (EmailValidator.getInstance().isValid(emailAddress)) {
+			try {
+				sendMessage(emailAddress, msgValue.getBcc() != null && msgValue.getBcc().length() > 0 ? msgValue.getBcc() : null, msgValue.getSubject(), msgValue.getBody(), msgValue.getAttachment());
+				return true;
+			} catch (Exception e) {
+				getLogger().log(Level.WARNING, "Couldn't send message to " + msgValue.getReceiver() + " (" + emailAddress + ") via e-mail.", e);
+			}
 		}
 		return false;
 	}

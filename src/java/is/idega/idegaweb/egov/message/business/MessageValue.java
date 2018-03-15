@@ -12,71 +12,72 @@ package is.idega.idegaweb.egov.message.business;
 import java.io.File;
 
 /**
- * 
+ *
  *  Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:aron@idega.com">aron</a>
  * @version $Revision$
  */
 public class MessageValue extends com.idega.block.process.message.business.MessageValue {
-	
+
    private String letterBody;
    private Boolean sendLetterIfNoEmail;
    private String contentCode;
-   private Boolean alwaysSendLetter; 
+   private Boolean alwaysSendLetter;
    private Boolean sendMail;
    private String printedLetterType;
    private File attachment = null;
    private String bcc;
-	
+   private String emailAddress;
+
 	public Boolean getAlwaysSendLetter() {
 		return this.alwaysSendLetter;
 	}
-	
+
 	public void setAlwaysSendLetter(Boolean alwaysSendLetter) {
 		this.alwaysSendLetter = alwaysSendLetter;
 	}
-	
+
 	public String getContentCode() {
 		return this.contentCode;
 	}
-	
+
 	public void setContentCode(String contentCode) {
 		this.contentCode = contentCode;
 	}
-	
+
 	public String getLetterBody() {
 		return this.letterBody;
 	}
-	
+
 	public void setLetterBody(String letterBody) {
 		this.letterBody = letterBody;
 	}
-	
+
 	public String getPrintedLetterType() {
 		return this.printedLetterType;
 	}
-	
+
 	public void setPrintedLetterType(String printedLetterType) {
 		this.printedLetterType = printedLetterType;
 	}
-	
+
 	public Boolean getSendLetterIfNoEmail() {
 		return this.sendLetterIfNoEmail;
 	}
-	
+
 	public void setSendLetterIfNoEmail(Boolean sendLetterIfNoEmail) {
 		this.sendLetterIfNoEmail = sendLetterIfNoEmail;
 	}
-	
+
 	public Boolean getSendMail() {
 		return this.sendMail;
 	}
-	
+
 	public void setSendMail(Boolean sendMail) {
 		this.sendMail = sendMail;
 	}
-	
+
 	public File getAttachment() {
 		return this.attachment;
 	}
@@ -92,9 +93,18 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 	public void setBcc(String bcc) {
 		this.bcc = bcc;
 	}
-	
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	@Override
 	public String toString() {
-		return "To: " + getReceiver() + ", from: " + getSender() + ", subject: " + getSubject() + ", message: " + getLetterBody();
+		return "To: " + getReceiver() + ", from: " + getSender() + ", subject: " + getSubject() + ", message: " + getLetterBody() + ", to email address: " + getEmailAddress();
 	}
 
 }
