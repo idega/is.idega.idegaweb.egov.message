@@ -17,9 +17,9 @@ import com.idega.data.IDOHome;
 import com.idega.util.IWTimestamp;
 
 /**
- * 
+ *
  *  Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:aron@idega.com">aron</a>
  * @version $Revision$
  */
@@ -54,7 +54,7 @@ public interface PrintDocumentsHome extends IDOHome {
     /**
      * @see se.idega.idegaweb.commune.printing.data.PrintDocumentsBMPBean#ejbFindAllDocumentByType
      */
-    public Collection findAllDocumentByType(String type, IWTimestamp from,
+    public Collection<PrintDocuments> findAllDocumentByType(String type, IWTimestamp from,
             IWTimestamp to, int resultSize, int startingIndex)
             throws FinderException;
 

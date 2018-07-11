@@ -22,7 +22,7 @@ import com.idega.util.IWTimestamp;
 
 /**
  * Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:laddi@idega.com">laddi</a>
  * @version $Revision$
  */
@@ -31,6 +31,7 @@ public interface PrintedLetterMessageHome extends MessageHome {
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindMessages
 	 */
+	@Override
 	public Collection findMessages(User user) throws FinderException;
 
 	/**
@@ -121,7 +122,7 @@ public interface PrintedLetterMessageHome extends MessageHome {
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindUnPrintedLettersByType
 	 */
-	public Collection findUnPrintedLettersByType(String letterType, int resultSize, int startingIndex)
+	public Collection<PrintMessage> findUnPrintedLettersByType(String letterType, int resultSize, int startingIndex)
 			throws FinderException;
 
 	/**
@@ -181,39 +182,46 @@ public interface PrintedLetterMessageHome extends MessageHome {
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindMessages
 	 */
+	@Override
 	public java.util.Collection findMessages(com.idega.user.data.User user, String[] status)
 			throws javax.ejb.FinderException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindMessages
 	 */
+	@Override
 	public Collection findMessages(User user, String[] status, int numberOfEntries, int startingEntry)
 			throws FinderException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindMessages
 	 */
+	@Override
 	public Collection findMessages(Group group, String[] status) throws FinderException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindMessages
 	 */
+	@Override
 	public Collection findMessages(Group group, String[] status, int numberOfEntries, int startingEntry)
 			throws FinderException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbFindMessages
 	 */
+	@Override
 	public Collection findMessages(User user, Collection groups, String[] status, int numberOfEntries, int startingEntry)
 			throws FinderException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbHomeGetNumberOfMessages
 	 */
+	@Override
 	public int getNumberOfMessages(User user, Collection groups, String[] status) throws IDOException;
 
 	/**
 	 * @see se.idega.idegaweb.commune.message.data.PrintedLetterMessageBMPBean#ejbHomeGetNumberOfMessages
 	 */
+	@Override
 	public int getNumberOfMessages(User user, String[] status) throws IDOException;
 }

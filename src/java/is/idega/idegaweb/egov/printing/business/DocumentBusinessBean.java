@@ -1,23 +1,12 @@
 /*
  * $Id$
- * 
+ *
  * Copyright (C) 2002 Idega hf. All Rights Reserved.
- * 
+ *
  * This software is the proprietary information of Idega hf. Use is subject to license terms.
- * 
+ *
  */
 package is.idega.idegaweb.egov.printing.business;
-
-import is.idega.idegaweb.egov.message.business.CommuneMessageBusiness;
-import is.idega.idegaweb.egov.message.business.MessagePdfHandler;
-import is.idega.idegaweb.egov.message.data.MessageConstants;
-import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
-import is.idega.idegaweb.egov.message.data.MessageHandlerInfoHome;
-import is.idega.idegaweb.egov.message.data.PrintMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
-import is.idega.idegaweb.egov.printing.data.PrintDocuments;
-import is.idega.idegaweb.egov.printing.data.PrintDocumentsHome;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,24 +65,35 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.xml.SAXmyHandler;
 import com.lowagie.text.xml.XmlPeer;
 
+import is.idega.idegaweb.egov.message.business.CommuneMessageBusiness;
+import is.idega.idegaweb.egov.message.business.MessagePdfHandler;
+import is.idega.idegaweb.egov.message.data.MessageConstants;
+import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
+import is.idega.idegaweb.egov.message.data.MessageHandlerInfoHome;
+import is.idega.idegaweb.egov.message.data.PrintMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
+import is.idega.idegaweb.egov.printing.data.PrintDocuments;
+import is.idega.idegaweb.egov.printing.data.PrintDocumentsHome;
+
 /**
  * @author <a href="mailto:tryggvi@idega.is">Tryggvi Larusson </a>
  * @author <a href="mailto:aron@idega.is">Aron Birkir </a>
  * @version 1.0
- * 
+ *
  * Scale dimension of the logo and the position of it can be set with bundle
  * properties in the commune bundle. (Use BundlePropertySetter)
- * 
+ *
  * The position of the address box can also be set with bundle properties.
- * 
+ *
  * The properties concerning these settings are all prefixed with "printing.".
- * 
+ *
  * To activate the bundle property changes you need to set the bundle property
  * "printing.dimension_refresh" to "true";
- * 
+ *
  * Every measure is in millimeters(mm). X coordinates are measured from the left
  * side of the page(paper). y coordinates are measured from bottom of the page
- * 
+ *
  * The address box is specified with its lower left corner coordinates and upper
  * right corner coordinates
  */
@@ -125,7 +125,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	/**
 	 * Method getDefaultTextFont.
-	 * 
+	 *
 	 * @return Font
 	 */
 	private Font getDefaultTextFont() {
@@ -151,7 +151,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	/**
 	 * Method getDefaultParagraphFont.
-	 * 
+	 *
 	 * @return Font
 	 */
 	private Font getDefaultParagraphFont() {
@@ -186,6 +186,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	 * Commented out since it is never used... private Font getTitleFont(PrintedLetterMessage msg) { return getDefaultTitleFont(); }
 	 */
 
+	@Override
 	public String getAddressString(User user) {
 		StringBuffer addrString = new StringBuffer();
 		try {
@@ -231,22 +232,27 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return address;
 	}
 
+	@Override
 	public Collection getPrintedDocuments() throws FinderException {
 		return getPrintDocumentsHome().findAllPrintedLetterDocuments();
 	}
 
+	@Override
 	public Collection getPrintedDocuments(String type) throws FinderException {
 		return getPrintDocumentsHome().findAllDocumentByType(type);
 	}
 
-	public Collection getPrintedDocuments(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
+	@Override
+	public Collection<PrintDocuments> getPrintedDocuments(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintDocumentsHome().findAllDocumentByType(type, from, to, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getPrintedMessages(String type, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findPrintedLettersByType(type, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getPrintedMessagesByPrimaryKeys(String[] primaryKeys, String type) throws FinderException {
 
 		PrintMessage msg;
@@ -262,42 +268,52 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return coll;
 	}
 
+	@Override
 	public Collection getPrintedMessages(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findPrintedLettersByType(type, from, to, resultSize, startingIndex);
 	}
 
-	public Collection getUnPrintedMessages(String type, int resultSize, int startingIndex) throws FinderException {
+	@Override
+	public Collection<PrintMessage> getUnPrintedMessages(String type, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findUnPrintedLettersByType(type, resultSize, startingIndex);
 	}
 
+	@Override
 	public Collection getUnPrintedMessages(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException {
 		return getPrintedLetterMessageHome().findUnPrintedLettersByType(type, from, to, resultSize, startingIndex);
 	}
 
+	@Override
 	public int getUnPrintedDefaultLettersCount() {
 		return getPrintedLetterMessageHome().getNumberOfUnPrintedDefaultLetters();
 	}
 
+	@Override
 	public int getUnPrintedPasswordLettersCount() {
 		return getPrintedLetterMessageHome().getNumberOfUnPrintedPasswordLetters();
 	}
 
+	@Override
 	public int getPrintedLettersCountByStatusAndType(String caseStatus, String type) {
 		return getPrintedLetterMessageHome().getNumberOfLettersByStatusAndType(caseStatus, type);
 	}
 
+	@Override
 	public int getUnprintedLettersCountByType(String type) {
 		return getUnprintedMessagesCountByType(type);
 	}
 
+	@Override
 	public int getUnprintedMessagesCountByType(String type) {
 		return getPrintedLetterMessageHome().getNumberOfUnprintedLettersByType(type);
 	}
 
+	@Override
 	public int getPrintedLettersCountByType(String type) {
 		return getPrintedLetterMessageHome().getNumberOfPrintedLettersByType(type);
 	}
 
+	@Override
 	public String[] getPrintMessageTypes() {
 		String[] ptypes = getPrintedLetterMessageHome().getPrintMessageTypes();
 		// String[] atypes = getSystemArchivationMessageHome().getPrintMessageTypes();
@@ -308,6 +324,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return ptypes;
 	}
 
+	@Override
 	public boolean isBulkLetterType(String type) {
 		if (type.equals(MessageConstants.LETTER_TYPE_PASSWORD)) {
 			return true;
@@ -323,6 +340,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	/**
 	 * Returns an empty array if nothing is found.
 	 */
+	@Override
 	public int[] getUnPrintedLettersIDs(String type, int resultSize, int startingIndex) {
 		try {
 			Collection coll = getPrintedLetterMessageHome().findUnPrintedLettersByType(type, resultSize, startingIndex);
@@ -350,6 +368,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	/**
 	 * Gets the point equal to given millimetercount
 	 */
+	@Override
 	public float getPointsFromMM(float millimeters) {
 		float pointPerMM = 72 / 25.4f;
 		return millimeters * pointPerMM;
@@ -380,6 +399,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		}
 	}
 
+	@Override
 	public PrintedLetterMessageHome getPrintedLetterMessageHome() {
 		try {
 			return (PrintedLetterMessageHome) getIDOHome(PrintedLetterMessage.class);
@@ -400,7 +420,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	protected CommuneMessageBusiness getMessageBusiness() {
 		try {
-			return (CommuneMessageBusiness) getServiceInstance(CommuneMessageBusiness.class);
+			return getServiceInstance(CommuneMessageBusiness.class);
 		}
 		catch (Exception e) {
 			throw new IBORuntimeException(e);
@@ -409,13 +429,14 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	protected UserBusiness getUserBusiness() {
 		try {
-			return (UserBusiness) getServiceInstance(UserBusiness.class);
+			return getServiceInstance(UserBusiness.class);
 		}
 		catch (Exception e) {
 			throw new IBORuntimeException(e);
 		}
 	}
 
+	@Override
 	public int writeBulkPDF(String[] messageIDs, User performer, String fileName, Locale locale, String type, boolean isAddressMessages, boolean flagMessages, boolean registerBulkData) throws FinderException {
 		int fileId = -1;
 		if (messageIDs.length > 0) {
@@ -424,6 +445,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return fileId;
 	}
 
+	@Override
 	public int writeBulkPDF(Collection messages, User performer, String fileName, Locale locale, String type, boolean areAddressMessages, boolean flagMessages, boolean registerBulkData) {
 		int fileId = -1;
 		try {
@@ -526,6 +548,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return fileId;
 	}
 
+	@Override
 	public int writePDF(PrintMessage msg, User performer, String fileName, Locale locale, boolean flagPrinted) throws Exception {
 		MemoryFileBuffer buffer = new MemoryFileBuffer();
 		OutputStream mos = new MemoryOutputStream(buffer);
@@ -786,8 +809,9 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	}
 
 	/**
-	 * 
+	 *
 	 */
+	@Override
 	public int createDefaultLetterHeader(Document document, String addressString, PdfWriter writer) throws Exception {
 		createLogoContent(document);
 		if (addressString != null) {
@@ -797,6 +821,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return 0;
 	}
 
+	@Override
 	public void createNewlinesContent(Document document) throws DocumentException {
 		StringBuffer newlines = new StringBuffer(newlinesBetween);
 		for (int i = 0; i < newlinesBetween; i++) {
@@ -805,6 +830,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		document.add(new Paragraph(newlines.toString()));
 	}
 
+	@Override
 	public void createLogoContent(Document document) throws BadElementException, MalformedURLException, IOException, DocumentException {
 		IWBundle iwb = getIWApplicationContext().getIWMainApplication().getBundle(is.idega.idegaweb.egov.message.business.MessageConstants.IW_BUNDLE_IDENTIFIER);
 		checkBundleDimensions(iwb);
@@ -815,6 +841,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 
 	}
 
+	@Override
 	public void createHeaderDate(Document document, PdfWriter writer, String dateString) throws DocumentException {
 		/*
 		 * final PdfPTable header = new PdfPTable(new float[]{1}); header.setWidthPercentage(100f); final PdfPCell defaultCell = header.getDefaultCell();
@@ -839,6 +866,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		}
 	}
 
+	@Override
 	public void createAddressContent(String addressString, PdfWriter writer) throws DocumentException {
 		IWBundle iwb = getIWApplicationContext().getIWMainApplication().getBundle(is.idega.idegaweb.egov.message.business.MessageConstants.IW_BUNDLE_IDENTIFIER);
 		checkBundleDimensions(iwb);
@@ -848,7 +876,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		 * public void setSimpleColumn(Phrase phrase, float llx, float lly, float urx, float ury, float leading, int alignment) Parameters: phrase - a
 		 * Phrase llx - the lower left x corner lly - the lower left y corner urx - the upper right x corner ury - the upper right y corner leading - the
 		 * leading alignment - the column alignment
-		 * 
+		 *
 		 */
 		float llx = getPointsFromMM(addressLowerLeftX);// getPointsFromMM((20f+95f));
 		float lly = getPointsFromMM(addressLowerLeftY);// 655f;
@@ -906,6 +934,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return 0;
 	}
 
+	@Override
 	public HashMap getMessageTagMap(PrintMessage msg, Locale locale) {
 		HashMap tagmap = new HashMap();
 		DateFormat df;
@@ -943,6 +972,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return tagmap;
 	}
 
+	@Override
 	public void createCommuneFooter(PdfWriter writer) throws Exception {
 
 		PdfContentByte cb = writer.getDirectContent();
@@ -998,6 +1028,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	// public void createArchiveMessageContent(Document
 	// document,SystemArchivationMessage msg, User performer,PdfWriter
 	// writer,Locale locale)throws Exception{
+	@Override
 	public void createArchiveMessageContent(DocumentPrintContext dpc) throws ContentCreationException {
 		try {
 			IWBundle iwb = getIWApplicationContext().getIWMainApplication().getBundle(is.idega.idegaweb.egov.message.business.MessageConstants.IW_BUNDLE_IDENTIFIER);
@@ -1119,10 +1150,12 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return returnFont;
 	}
 
+	@Override
 	public String getXMLLetterUrl(IWBundle iwb, Locale locale, String name) {
 		return "file://" + iwb.getResourcesRealPath(locale) + "/" + name;
 	}
 
+	@Override
 	public String getXMLLetterUrl(IWBundle iwb, Locale locale, String name, boolean createIfNotExists) {
 		String url = getXMLLetterUrl(iwb, locale, name);
 		if (url != null) {
@@ -1170,6 +1203,7 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 		return url;
 	}
 
+	@Override
 	public String getDefaultXMLTemplateValue() {
 		StringBuffer content = new StringBuffer();
 		content.append("<userletter>\n");
@@ -1218,9 +1252,10 @@ public class DocumentBusinessBean extends com.idega.business.IBOServiceBean impl
 	 */
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see se.idega.idegaweb.commune.message.business.MessagePdfHandler#createMessageContent(se.idega.idegaweb.commune.printing.business.DocumentPrintContext)
 	 */
+	@Override
 	public void createMessageContent(DocumentPrintContext dpc) throws ContentCreationException {
 		createContent(dpc);
 	}

@@ -1,14 +1,11 @@
 /*
  * $Id$ Created on 7.10.2004
- * 
+ *
  * Copyright (C) 2004 Idega Software hf. All Rights Reserved.
- * 
+ *
  * This software is the proprietary information of Idega hf. Use is subject to license terms.
  */
 package is.idega.idegaweb.egov.printing.business;
-
-import is.idega.idegaweb.egov.message.data.PrintMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -27,10 +24,14 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
 
+import is.idega.idegaweb.egov.message.data.PrintMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessageHome;
+import is.idega.idegaweb.egov.printing.data.PrintDocuments;
+
 /**
- * 
+ *
  * Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:aron@idega.com">aron</a>
  * @version $Revision$
  */
@@ -54,7 +55,7 @@ public interface DocumentBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.egov.printing.business.DocumentBusinessBean#getPrintedDocuments
 	 */
-	public Collection getPrintedDocuments(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException, java.rmi.RemoteException;
+	public Collection<PrintDocuments> getPrintedDocuments(String type, IWTimestamp from, IWTimestamp to, int resultSize, int startingIndex) throws FinderException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.egov.printing.business.DocumentBusinessBean#getPrintedMessages
@@ -74,7 +75,7 @@ public interface DocumentBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.egov.printing.business.DocumentBusinessBean#getUnPrintedMessages
 	 */
-	public Collection getUnPrintedMessages(String type, int resultSize, int startingIndex) throws FinderException, java.rmi.RemoteException;
+	public Collection<PrintMessage> getUnPrintedMessages(String type, int resultSize, int startingIndex) throws FinderException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.egov.printing.business.DocumentBusinessBean#getUnPrintedMessages

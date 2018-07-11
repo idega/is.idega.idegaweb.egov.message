@@ -1,12 +1,5 @@
 package is.idega.idegaweb.egov.printing.presentation;
 
-import is.idega.idegaweb.egov.message.business.CommuneMessageBusiness;
-import is.idega.idegaweb.egov.message.data.PrintMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
-import is.idega.idegaweb.egov.printing.business.DocumentBusiness;
-import is.idega.idegaweb.egov.printing.business.DocumentService;
-import is.idega.idegaweb.egov.printing.data.PrintDocuments;
-
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,10 +27,17 @@ import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 import com.idega.util.StringHandler;
 
+import is.idega.idegaweb.egov.message.business.CommuneMessageBusiness;
+import is.idega.idegaweb.egov.message.data.PrintMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
+import is.idega.idegaweb.egov.printing.business.DocumentBusiness;
+import is.idega.idegaweb.egov.printing.business.DocumentService;
+import is.idega.idegaweb.egov.printing.data.PrintDocuments;
+
 /**
  * Title: PrintedLetterViewer Description: A class to view and manage PrintedLetterMessage in the idegaWeb Commune application Copyright: Copyright
  * idega Software (c) 2002 Company: idega Software
- * 
+ *
  * @author <a href="mailto:tryggvi@idega.is">Tryggvi Larusson</a>
  * @author <a href="mailto:aron@idega.is">Aron Birkir</a>
  * @version 1.0
@@ -298,7 +298,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	private void printAllUnPrintedMessages(IWContext iwc) throws Exception {
 		// int userID = ((Integer) iwc.getCurrentUser().getPrimaryKey()).intValue();
 
-		Collection unPrintedLetters = getDocumentBusiness(iwc).getUnPrintedMessages(this.currentType, -1, -1);
+		Collection<PrintMessage> unPrintedLetters = getDocumentBusiness(iwc).getUnPrintedMessages(this.currentType, -1, -1);
 		/*
 		 * getDocumentBusiness(iwc).writeBulkPDF( unPrintedLetters, iwc.getCurrentUser(), localize("printdoc.bulkletter_filename","BulkLetterPDF"),
 		 * iwc.getApplicationSettings().getDefaultLocale(), currentType, false, true, true);
@@ -351,7 +351,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 			DocumentService serv = getDocumentService(iwc);
 			/*
 			 * PrintedLetterMessageHome phome = getDocumentBusiness(iwc).getPrintedLetterMessageHome();
-			 * 
+			 *
 			 * for (int i = 0; i < ids.length; i++) { PrintedLetterMessage msg =phome.findByPrimaryKey(new Integer(ids[i]));
 			 * serv.createPDF(iwc,msg,"letter.pdf",false); }
 			 */
@@ -591,7 +591,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 		 * SubmitButton(PRM_DEL_SELECTED,getResourceBundle().getLocalizedString("printdoc.delete", "Delete")); delete = (SubmitButton) getButton(delete);
 		 * delete.setSubmitConfirm(localize("printdoc.delete_message", "Are you sure you want to mark these letters as deleted ?")); T.add(new
 		 * HiddenInput(PRM_PROC_SELECTED, "del")); T.add(delete, col++, 1); }
-		 * 
+		 *
 		 * if (!currentStatus.equals(statusDeleted)) { CheckBox mark = getCheckBox("prv_mark",""); T.add(mark, col++, 1);
 		 * T.add(getLocalizedHeader("printdoc.keep_unprinted", "Keep unprinted status"), col++, 1); } CheckBox bulk = new CheckBox("prv_bulk");
 		 * T.add(bulk, col++, 1); T.add(getLocalizedHeader("printdoc.create_bulk_letter", "Bulk letter"), col++, 1);
@@ -683,7 +683,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 
 		int count = this.cursor_p + 1;
 		int ccp = this.count_p + this.cursor_p;
-		Collection printDocs = getDocumentBusiness(iwc).getPrintedDocuments(this.currentType, this.pFrom, this.pTo, this.count_p, this.cursor_p);
+		Collection<PrintDocuments> printDocs = getDocumentBusiness(iwc).getPrintedDocuments(this.currentType, this.pFrom, this.pTo, this.count_p, this.cursor_p);
 
 		int prow = 1;
 		pT.add(getLocalizedHeader("printdoc.printed_letters", "Printed letters"), 1, prow++);
@@ -696,14 +696,14 @@ public class PrintDocumentsViewer extends CommuneBlock {
 		printedLetterDocs.setHeader(localize("printdoc.n_o_docs", "Number of documents"), 3);
 		printedLetterDocs.setWidth(Table.HUNDRED_PERCENT);
 
-		Iterator iter = printDocs.iterator();
+		Iterator<PrintDocuments> iter = printDocs.iterator();
 
 		/*
 		 * if (cursor_p > 0) { while (iter.hasNext() && cursor_p > 0) { iter.next(); cursor_p--; } }
 		 */
 		String view = localize("printdoc.view", "View");
 		while (iter.hasNext() && count <= ccp) {
-			PrintDocuments doc = (PrintDocuments) iter.next();
+			PrintDocuments doc = iter.next();
 			printedLetterDocs.add(String.valueOf(count));
 			printedLetterDocs.add(doc.getCreated().toString());
 			// messageList.add("-");
@@ -726,36 +726,36 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	/*
 	 * Commented out since it is never used... private void addDocumentsListView(IWContext iwc) throws Exception { Form myForm = new Form(); Table T =
 	 * new Table(); myForm.add(T); add(myForm);
-	 * 
+	 *
 	 * //int urow = 1;
-	 * 
+	 *
 	 * if (isBulkManual) T.add(new HiddenInput(PRM_BULK_VIEW, "true"));
-	 * 
+	 *
 	 * ColumnList printedLetterDocs = new ColumnList(4);
-	 * 
+	 *
 	 * Collection printDocs = getDocumentBusiness(iwc).getPrintedDocuments(currentType, pFrom, pTo);
-	 * 
+	 *
 	 * int prow = 1; Table hT = new Table(2, 1); hT.setWidth(hT.HUNDRED_PERCENT); hT.setAlignment(2, 1, hT.HORIZONTAL_ALIGN_RIGHT);
-	 * 
+	 *
 	 * hT.add(getLocalizedHeader("printdoc.printed_letters", "Printed letters"), 1, 1); Link singleMsgs = new Link(localize("printdoc.normal_view",
 	 * "Normal view")); singleMsgs.addParameter(PARAM_LETTER_TYPE, currentType); singleMsgs.addParameter(PARAM_LETTER_STATUS, currentStatus);
 	 * addDateParametersToLink(singleMsgs); hT.add(singleMsgs, 2, 1);
-	 * 
+	 *
 	 * T.add(hT, 1, prow++); T.add(getUnPrintedDatesForm(iwc, false), 1, prow++); T.add(printedLetterDocs, 1, prow++); T.add(getCursorLinks(iwc,
 	 * printDocs.size(), cursor_p, PRM_CURSOR_P, count_p), 1, prow++);
-	 * 
+	 *
 	 * printedLetterDocs.setHeader("#", 1); printedLetterDocs.setHeader(localize("printdoc.printed_date", "Printing date"), 2);
 	 * printedLetterDocs.setHeader(localize("printdoc.n_o_docs", "Number of documents"), 3); printedLetterDocs.setWidth(Table.HUNDRED_PERCENT);
-	 * 
+	 *
 	 * Iterator iter = printDocs.iterator(); int count = cursor_p + 1; int ccp = count_p + cursor_p; if (cursor_p > 0) { while (iter.hasNext() &&
 	 * cursor_p > 0) { iter.next(); cursor_p--; } } while (iter.hasNext() && count <= ccp) { PrintDocuments doc = (PrintDocuments) iter.next();
 	 * printedLetterDocs.add(String.valueOf(count)); printedLetterDocs.add(doc.getCreated().toString()); //messageList.add("-"); int subcount =
 	 * doc.getNumberOfSubDocuments();
-	 * 
+	 *
 	 * Link namesLink = new Link(String.valueOf(subcount)); namesLink.addParameter(PARAM_VIEW_UNPRINTED, "true");
 	 * namesLink.addParameter(PARAM_LETTER_TYPE, currentType); namesLink.addParameter(PARAM_LETTER_STATUS, currentStatus);
 	 * namesLink.addParameter("prv_file_id", doc.getDocumentFileID()); addDateParametersToLink(namesLink); printedLetterDocs.add(namesLink);
-	 * 
+	 *
 	 * int fileID = doc.getDocumentFileID(); Link viewLink = new Link(localize("printdoc.view", "View")); viewLink.setFile(fileID);
 	 * printedLetterDocs.add(viewLink); count++; } }
 	 */
@@ -764,29 +764,29 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	 * Commented out since it is never used... private void addMessagesList(IWContext iwc) throws Exception { Form uForm = new Form(); Form pForm = new
 	 * Form(); Table uT = new Table(); Table pT = new Table(); uForm.add(uT); pForm.add(pT); add(uForm); add(pForm); ColumnList unPrintedLetterDocs =
 	 * new ColumnList(7);
-	 * 
+	 *
 	 * int urow = 1; Collection unprintedLetters = getMessageBusiness(iwc).getSingleUnPrintedLetterMessagesByType(currentType, uFrom, uTo);
 	 * uT.add(getLocalizedHeader("printdoc.unprinted_letters", "Letters for printing"), 1, urow++); uT.add(getUnPrintedDatesForm(iwc, false), 1,
 	 * urow++); uT.add(unPrintedLetterDocs, 1, urow++); uT.add(getPrintButton(), 1, urow++); uT.add( getCursorLinks(iwc, unprintedLetters.size(),
 	 * cursor_u, PRM_CURSOR_U, count_u), 1, urow++);
-	 * 
+	 *
 	 * unPrintedLetterDocs.setWidth(Table.HUNDRED_PERCENT); unPrintedLetterDocs.setBackroundColor("#e0e0e0"); unPrintedLetterDocs.setHeader("#", 1);
 	 * unPrintedLetterDocs.setHeader(localize("printdoc.created_date", "Message created"), 2);
 	 * unPrintedLetterDocs.setHeader(localize("printdoc.receiver", "Receiver"), 3); unPrintedLetterDocs.setHeader(localize("printdoc.subject",
 	 * "Subject"), 4);
-	 * 
+	 *
 	 * CheckBox checkAll = new CheckBox("checkall"); checkAll.setToCheckOnClick(PRM_U_CHK, true); unPrintedLetterDocs.setHeader(checkAll, 5);
 	 * unPrintedLetterDocs.setHeader(localize("printdoc.file", "File"), 6); //unPrintedLetterDocs.setHeader(localize("printdoc.select","Select"),5);
 	 * unPrintedLetterDocs.setHeader(localize("printdoc.bulk_file", "Bulk ID"), 7);
-	 * 
+	 *
 	 * Iterator iter = unprintedLetters.iterator(); int count = cursor_u + 1; int ccu = count_u + cursor_u; if (cursor_u > 0) { while (iter.hasNext() &&
 	 * cursor_u > 0) { iter.next(); cursor_u--; } }
-	 * 
+	 *
 	 * int bulkId; while (iter.hasNext() && count <= ccu) { PrintedLetterMessage msg = (PrintedLetterMessage) iter.next();
 	 * unPrintedLetterDocs.add(String.valueOf(count)); unPrintedLetterDocs.add(msg.getCreated().toString()); //messageList.add("-");
-	 * 
+	 *
 	 * unPrintedLetterDocs.add(msg.getOwner().getName());
-	 * 
+	 *
 	 * unPrintedLetterDocs.add(msg.getSubject()); if (useCheckBox) { CheckBox box = new CheckBox(PRM_U_CHK, msg.getPrimaryKey().toString());
 	 * uForm.addParameter(PARAM_LETTER_TYPE, currentType); //uForm.addParameter(PARAM_LETTER_STATUS, currentStatus); unPrintedLetterDocs.add(box); }
 	 * else { Link printLink = new Link(localize("printdoc.print", "Print")); printLink.addParameter(PARAM_PRINT_MSG, "true");
@@ -794,28 +794,28 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	 * printLink.addParameter(PARAM_MESSAGE_ID, msg.getPrimaryKey().toString()); addDateParametersToLink(printLink); unPrintedLetterDocs.add(printLink); }
 	 * int fileID = msg.getMessageDataFileID(); if (fileID > 0) { Link viewLink = new Link(localize("printdoc.view", "View")); viewLink.setFile(fileID);
 	 * unPrintedLetterDocs.add(viewLink); } else { unPrintedLetterDocs.add("-"); }
-	 * 
+	 *
 	 * bulkId = msg.getMessageBulkDataFileID(); if (bulkId > 0) { Link bulkLink = new Link(String.valueOf(msg.getMessageBulkDataFileID()));
 	 * bulkLink.setFile(msg.getMessageBulkDataFileID()); unPrintedLetterDocs.add(bulkLink); } else { unPrintedLetterDocs.add("-"); } count++; }
-	 * 
+	 *
 	 * ColumnList printedLetterDocs = new ColumnList(6); printedLetterDocs.setWidth(Table.HUNDRED_PERCENT);
 	 * printedLetterDocs.setBackroundColor("#e0e0e0"); printedLetterDocs.setHeader("#", 1);
 	 * printedLetterDocs.setHeader(localize("printdoc.created_date", "Message created"), 2); printedLetterDocs.setHeader(localize("printdoc.receiver",
 	 * "Receiver"), 3); printedLetterDocs.setHeader(localize("printdoc.subject", "Subject"), 4); printedLetterDocs.setHeader(localize("printdoc.file",
 	 * "File"), 5); printedLetterDocs.setHeader(localize("printdoc.bulk_file", "Bulk File"), 6); Collection printedLetters =
 	 * getMessageBusiness(iwc).getSinglePrintedLetterMessagesByType(currentType, pFrom, pTo);
-	 * 
+	 *
 	 * int prow = 1; pT.add(Text.getBreak(), 1, prow++); pT.add(getLocalizedHeader("printdoc.printed_letters", "Printed letters"), 1, prow++);
 	 * pT.add(getPrintedDatesForm(iwc), 1, prow++); pT.add(printedLetterDocs, 1, prow++); pT.add( getCursorLinks(iwc, printedLetters.size(), cursor_p,
 	 * PRM_CURSOR_P, count_p), 1, prow++);
-	 * 
+	 *
 	 * iter = printedLetters.iterator(); count = cursor_p + 1; int ccp = cursor_p + count_p; if (cursor_p > 0) { while (iter.hasNext() && cursor_p > 0) {
 	 * iter.next(); cursor_p--; } } while (iter.hasNext() && count <= ccp) { PrintedLetterMessage msg = (PrintedLetterMessage) iter.next();
 	 * printedLetterDocs.add(String.valueOf(count)); printedLetterDocs.add(msg.getCreated().toString()); //messageList.add("-");
 	 * printedLetterDocs.add(msg.getOwner().getName()); printedLetterDocs.add(msg.getSubject()); int fileID = msg.getMessageDataFileID(); Link viewLink =
 	 * new Link(localize("printdoc.view", "View")); viewLink.setFile(fileID); printedLetterDocs.add(viewLink); bulkId = msg.getMessageBulkDataFileID();
 	 * if (bulkId > 0) {
-	 * 
+	 *
 	 * Link bulkLink = new Link(String.valueOf(bulkId)); bulkLink.setFile(bulkId); printedLetterDocs.add(bulkLink); } else printedLetterDocs.add("");
 	 * count++; } }
 	 */
@@ -885,7 +885,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 
 			/*
 			 * bulkId = msg.getMessageBulkDataFileID(); if (bulkId > 0) {
-			 * 
+			 *
 			 * Link bulkLink = new Link(String.valueOf(bulkId)); bulkLink.setFile(bulkId); printedLetterDocs.add(bulkLink); } else
 			 * printedLetterDocs.add("");
 			 */
@@ -932,7 +932,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 		int count = this.cursor_p + 1;
 		/*
 		 * int ccp = count_p + cursor_p;
-		 * 
+		 *
 		 * if (cursor_p > 0) { while (iter.hasNext() && cursor_p > 0) { iter.next(); cursor_p--; } }
 		 */
 		String view = localize("printdoc.view", "View");
@@ -993,7 +993,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 		Collection letters = getMessageBusiness(iwc).getSingleLettersByTypeAndStatus(this.currentType, this.currentStatus, this.uFrom, this.uTo, this.count_u, this.cursor_u);
 		/*
 		 * Table hT = new Table(2, 1); hT.setWidth(hT.HUNDRED_PERCENT); hT.setAlignment(2, 1, hT.HORIZONTAL_ALIGN_RIGHT);
-		 * 
+		 *
 		 * hT.add(getLocalizedHeader("printdoc.letters", "Letters"), 1, 1); Link singleMsgs = new Link(localize("printdoc.bulk_view", "Bulk view"));
 		 * singleMsgs.addParameter(PRM_BULK_VIEW, "true"); singleMsgs.addParameter(PARAM_LETTER_TYPE, currentType);
 		 * singleMsgs.addParameter(PARAM_LETTER_STATUS, currentStatus); addDateParametersToLink(singleMsgs); hT.add(singleMsgs, 2, 1);
@@ -1196,7 +1196,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 
 	/*
 	 * private boolean displayMessageToCommuneAdministrator(IWContext iwc, Message message) { boolean canDisplay = true; try {
-	 * 
+	 *
 	 * CaseCode caseCode = message.getParentCase().getCaseCode(); CommuneCaseBusiness ccBus = (CommuneCaseBusiness) IBOLookup.getServiceInstance(iwc,
 	 * CommuneCaseBusiness.class); CaseCode[] codes = ccBus.getProviderCaseCodes(); for (int i = 0; i < codes.length && canDisplay; i++) { canDisplay =
 	 * !codes[i].equals(caseCode); } } catch (Exception e) { e.printStackTrace(System.err); } return canDisplay; }
@@ -1229,7 +1229,7 @@ public class PrintDocumentsViewer extends CommuneBlock {
 	/**
 	 * Adds a hide filter to this viewer, the viewer then hides the letter if its parent case code equals the filter, unless the current user is the
 	 * letter owner
-	 * 
+	 *
 	 * @param filter
 	 */
 	public void setHideCaseCodeFilter(String filter) {
