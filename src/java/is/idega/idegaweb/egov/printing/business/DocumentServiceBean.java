@@ -1,18 +1,11 @@
 /*
  * $Id$ Created on 15.10.2004
- * 
+ *
  * Copyright (C) 2004 Idega Software hf. All Rights Reserved.
- * 
+ *
  * This software is the proprietary information of Idega hf. Use is subject to license terms.
  */
 package is.idega.idegaweb.egov.printing.business;
-
-import is.idega.idegaweb.egov.message.business.CommuneMessageBusiness;
-import is.idega.idegaweb.egov.message.data.MessageConstants;
-import is.idega.idegaweb.egov.message.data.PrintMessage;
-import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
-import is.idega.idegaweb.egov.printing.data.PrintDocuments;
-import is.idega.idegaweb.egov.printing.data.PrintDocumentsHome;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,15 +29,23 @@ import com.idega.idegaweb.IWUserContext;
 import com.idega.io.MemoryFileBuffer;
 import com.idega.io.MemoryInputStream;
 import com.idega.io.MemoryOutputStream;
+import com.idega.util.ListUtil;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 
+import is.idega.idegaweb.egov.message.business.CommuneMessageBusiness;
+import is.idega.idegaweb.egov.message.data.MessageConstants;
+import is.idega.idegaweb.egov.message.data.PrintMessage;
+import is.idega.idegaweb.egov.message.data.PrintedLetterMessage;
+import is.idega.idegaweb.egov.printing.data.PrintDocuments;
+import is.idega.idegaweb.egov.printing.data.PrintDocumentsHome;
+
 /**
- * 
+ *
  * Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:aron@idega.com">aron</a>
  * @version $Revision$
  */
@@ -53,6 +54,7 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 	/**
 	 * Creates a pdf letter from a template which is chosen from the message type. Returns a primaryKey to a file in database
 	 */
+	@Override
 	public Integer createPDF(IWUserContext iwuc, PrintMessage msg, String fileName, boolean flagPrinted) throws ContentCreationException {
 		try {
 			MemoryFileBuffer buffer = new MemoryFileBuffer();
@@ -81,6 +83,7 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 		}
 	}
 
+	@Override
 	public Integer createPDF(IWUserContext iwuc, String[] ids, String type, String fileName, boolean flagPrinted) {
 		try {
 			Collection msgs = getBusiness().getPrintedMessagesByPrimaryKeys(ids, type);
@@ -94,7 +97,12 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 	/**
 	 * Creates a pdf letter from a template which is chosen from the message type. Returns a primaryKey to a file in database
 	 */
-	public Integer createPDF(IWUserContext iwuc, Collection msgs, String type, String fileName, boolean flagPrinted) {
+	@Override
+	public Integer createPDF(IWUserContext iwuc, Collection<PrintMessage> msgs, String type, String fileName, boolean flagPrinted) {
+		if (ListUtil.isEmpty(msgs)) {
+			return null;
+		}
+
 		OutputStream outerOs = null;
 		InputStream outerIs = null;
 		try {
@@ -117,17 +125,19 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 
 			CommuneMessageBusiness msgBuiz = getMessageService();
 			int lettersProcessed = 0;
-			for (Iterator iter = msgs.iterator(); iter.hasNext();) {
-				PrintMessage msg = (PrintMessage) iter.next();
+			for (Iterator<PrintMessage> iter = msgs.iterator(); iter.hasNext();) {
+				PrintMessage msg = iter.next();
 				MemoryFileBuffer buffer = new MemoryFileBuffer();
 				OutputStream mos = new MemoryOutputStream(buffer);
 				InputStream mis = new MemoryInputStream(buffer);
 
 				PrintingContext pcx = getPrintingContext(iwuc, msg);
-				if (pcx != null) {
+				if (pcx == null) {
+					getLogger().warning("Didn't get printing context for message " + msg + " (" + msg.getClass().getName() + ")");
+				} else {
 					pcx.setDocumentStream(mos);
 					pserv.printDocument(pcx);
-	
+
 					PdfReader reader = new PdfReader(buffer.buffer());
 					PdfImportedPage page;
 					int n = reader.getNumberOfPages();
@@ -169,17 +179,19 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 		}
 	}
 
+	@Override
 	public PrintingContext getPrintingContext(IWUserContext iwuc, PrintMessage msg) {
 		if (msg instanceof PrintedLetterMessage) {
 			PrintedLetterMessage pmsg = (PrintedLetterMessage) msg;
 			if (pmsg.getLetterType().equals(MessageConstants.LETTER_TYPE_PASSWORD)) {
 				PasswordLetterContext context = new PasswordLetterContext(iwuc, msg);
-				
+
 				Address address = (Address) context.getDocumentProperties().get("address");
 				if (address == null) {
+					getLogger().warning("Unknown address of receiver of message " + msg);
 					return null;
 				}
-				
+
 				return context;
 			}
 			else if (pmsg.getLetterType().equals(MessageConstants.LETTER_TYPE_DEFAULT)) {
@@ -239,13 +251,13 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 	 * total number of pages int n = reader.getNumberOfPages(); List bookmarks = SimpleBookmark.getBookmark(reader); if (bookmarks != null) { if
 	 * (pageOffset != 0) SimpleBookmark.shiftPageNumbers(bookmarks, pageOffset, null); master.addAll(bookmarks); } pageOffset += n;
 	 * System.out.println("There are " + n + " pages in " + args[f]);
-	 * 
+	 *
 	 * if (f == 0) { // step 1: creation of a document-object document = new Document(reader.getPageSizeWithRotation(1)); // step 2: we create a writer
 	 * that listens to the document writer = new PdfCopy(document, new FileOutputStream(outFile)); // step 3: we open the document document.open(); } //
 	 * step 4: we add content PdfImportedPage page; for (int i = 0; i < n; ) { ++i; page = writer.getImportedPage(reader, i); writer.addPage(page);
 	 * System.out.println("Processed page " + i); } PRAcroForm form = reader.getAcroForm(); if (form != null) writer.copyAcroForm(reader); f++; } if
 	 * (master.size() > 0) writer.setOutlines(master); // step 5: we close the document document.close(); }
-	 * 
+	 *
 	 */
 	protected ICFileHome getICFileHome() {
 		try {
@@ -265,15 +277,17 @@ public class DocumentServiceBean extends IBOServiceBean implements DocumentServi
 		}
 	}
 
+	@Override
 	public PrintingService getPrintingService() throws IBOLookupException {
-		return (PrintingService) getServiceInstance(PrintingService.class);
+		return getServiceInstance(PrintingService.class);
 	}
 
 	private DocumentBusiness getBusiness() throws IBOLookupException {
-		return (DocumentBusiness) getServiceInstance(DocumentBusiness.class);
+		return getServiceInstance(DocumentBusiness.class);
 	}
 
+	@Override
 	public CommuneMessageBusiness getMessageService() throws IBOLookupException {
-		return (CommuneMessageBusiness) getServiceInstance(CommuneMessageBusiness.class);
+		return getServiceInstance(CommuneMessageBusiness.class);
 	}
 }
