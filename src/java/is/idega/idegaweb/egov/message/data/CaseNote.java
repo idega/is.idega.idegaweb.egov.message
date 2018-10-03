@@ -24,6 +24,9 @@ import com.idega.user.data.User;
  * @version $Revision$
  */
 public interface CaseNote extends IDOEntity, Message, Case {
+
+	public static final String CASE_NOTE_TYPE = "NOTE";
+
     /**
      * @see se.idega.idegaweb.commune.message.data.CaseNoteBMPBean#getCaseCodeKey
      */

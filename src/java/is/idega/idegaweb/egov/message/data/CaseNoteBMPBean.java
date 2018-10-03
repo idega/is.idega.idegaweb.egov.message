@@ -23,7 +23,7 @@ public class CaseNoteBMPBean extends AbstractCaseBMPBean implements CaseNote, Me
 	private static final String COLUMN_SENDER = "SENDER";
 	private static final String COLUMN_CONTENT_CODE = "CONTENT_CODE";
 	private static final String COLUMN_CASE_ID = "CASE_ID";
-	private static final String CASE_CODE_KEY = "NOTE";
+	private static final String CASE_CODE_KEY = CASE_NOTE_TYPE;
 	private static final String CASE_CODE_DESCRIPTION = "Case Note";
 
 	@Override
