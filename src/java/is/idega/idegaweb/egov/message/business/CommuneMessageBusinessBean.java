@@ -245,7 +245,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, boolean sendLetter) {
-		return createUserMessage(parentCase, receiver, sender, handler, subject, body, sendLetter, null, false);
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, body, sendLetter, null, false, sendLetter);
 	}
 
 	@Override
