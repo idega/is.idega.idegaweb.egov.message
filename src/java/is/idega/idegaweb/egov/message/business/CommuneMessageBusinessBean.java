@@ -708,6 +708,10 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public boolean getIfUserPreferesMessageByEmail(User user) {
+		if (getIWMainApplication().getSettings().getBoolean("msg.skip_check_if_want_receive_email", false)) {
+			return true;
+		}
+		
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
 			return receiver.receiveEmails();
