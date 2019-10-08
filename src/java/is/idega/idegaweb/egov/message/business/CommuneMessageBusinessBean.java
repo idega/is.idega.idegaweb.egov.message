@@ -400,10 +400,13 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		if (EmailValidator.getInstance().isValid(emailAddress)) {
 			try {
 				sendMessage(emailAddress, msgValue.getBcc() != null && msgValue.getBcc().length() > 0 ? msgValue.getBcc() : null, msgValue.getSubject(), msgValue.getBody(), msgValue.getAttachment());
+				getLogger().info("Sent email to " + msgValue.getReceiver() + " (" + emailAddress + ") with subject " + msgValue.getSubject());
 				return true;
 			} catch (Exception e) {
 				getLogger().log(Level.WARNING, "Couldn't send message to " + msgValue.getReceiver() + " (" + emailAddress + ") via e-mail.", e);
 			}
+		} else {
+			getLogger().warning("Email address '" + emailAddress + "' is not valid");
 		}
 		return false;
 	}
@@ -711,7 +714,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		if (getIWMainApplication().getSettings().getBoolean("msg.skip_check_if_want_receive_email", false)) {
 			return true;
 		}
-		
+
 		MessageReceiver receiver = getMessageReceiver(user);
 		if (receiver != null) {
 			return receiver.receiveEmails();
