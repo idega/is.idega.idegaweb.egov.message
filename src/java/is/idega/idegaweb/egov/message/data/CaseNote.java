@@ -11,6 +11,7 @@ package is.idega.idegaweb.egov.message.data;
 
 
 
+import com.idega.block.process.business.ProcessConstants;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.message.data.Message;
 import com.idega.data.IDOEntity;
@@ -25,7 +26,7 @@ import com.idega.user.data.User;
  */
 public interface CaseNote extends IDOEntity, Message, Case {
 
-	public static final String CASE_NOTE_TYPE = "NOTE";
+	public static final String CASE_NOTE_TYPE = ProcessConstants.NOTE_CASE_CODE;
 
     /**
      * @see se.idega.idegaweb.commune.message.data.CaseNoteBMPBean#getCaseCodeKey

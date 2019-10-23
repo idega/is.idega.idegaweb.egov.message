@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.ejb.FinderException;
 
+import com.idega.block.process.business.ProcessConstants;
 import com.idega.block.process.data.AbstractCaseBMPBean;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.message.data.Message;
@@ -30,7 +31,7 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 	private static final String COLUMN_SENDER = "SENDER";
 	private static final String COLUMN_CONTENT_CODE = "CONTENT_CODE";
 
-	private static final String CASE_CODE_KEY = "SYMEDAN";
+	private static final String CASE_CODE_KEY = ProcessConstants.SYSTEM_MESSAGE_CASE_CODE;
 	private static final String CASE_CODE_DESCRIPTION = "User Message";
 
 	@Override
