@@ -29,6 +29,7 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
    private File attachment = null;
    private String bcc;
    private String emailAddress;
+   private Boolean deleteAttachment = Boolean.TRUE;
 
 	public Boolean getAlwaysSendLetter() {
 		return this.alwaysSendLetter;
@@ -100,6 +101,14 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+
+	public Boolean getDeleteAttachment() {
+		return deleteAttachment;
+	}
+
+	public void setDeleteAttachment(Boolean deleteAttachment) {
+		this.deleteAttachment = deleteAttachment;
 	}
 
 	@Override
