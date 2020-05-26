@@ -51,6 +51,7 @@ import com.idega.util.CoreUtil;
 import com.idega.util.EmailValidator;
 import com.idega.util.IWTimestamp;
 import com.idega.util.SendMail;
+import com.idega.util.StringUtil;
 
 import is.idega.idegaweb.egov.message.data.MessageHandlerInfo;
 import is.idega.idegaweb.egov.message.data.MessageHandlerInfoHome;
@@ -425,13 +426,18 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	private boolean sendEmail(MessageValue msgValue) throws IBOLookupException, RemoteException {
 		String emailAddress = null;
-		try {
-			Email mail = getServiceInstance(UserBusiness.class).getUsersMainEmail(msgValue.getReceiver());
-			if (mail != null) {
-				emailAddress = mail.getEmailAddress();
+		if (getSettings().getBoolean("msg.send_email.check_provided_email", false)) {
+			emailAddress = msgValue.getEmailAddress();
+		}
+		if (StringUtil.isEmpty(emailAddress)) {
+			try {
+				Email mail = getServiceInstance(UserBusiness.class).getUsersMainEmail(msgValue.getReceiver());
+				if (mail != null) {
+					emailAddress = mail.getEmailAddress();
+				}
+			} catch (NoEmailFoundException e) {
+				getLogger().warning("Couldn't find email for " + msgValue.getReceiver());
 			}
-		} catch (NoEmailFoundException e) {
-			getLogger().warning("Couldn't find email for " + msgValue.getReceiver());
 		}
 		if (!EmailValidator.getInstance().isValid(emailAddress)) {
 			emailAddress = msgValue.getEmailAddress();
@@ -439,7 +445,14 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 		if (EmailValidator.getInstance().isValid(emailAddress)) {
 			try {
-				sendMessage(emailAddress, msgValue.getBcc() != null && msgValue.getBcc().length() > 0 ? msgValue.getBcc() : null, msgValue.getSubject(), msgValue.getBody(), msgValue.getAttachment(), msgValue.getDeleteAttachment() == null ? true : msgValue.getDeleteAttachment());
+				sendMessage(
+						emailAddress,
+						StringUtil.isEmpty(msgValue.getBcc()) || emailAddress.equals(msgValue.getBcc()) ? null : msgValue.getBcc(),
+						msgValue.getSubject(),
+						msgValue.getBody(),
+						msgValue.getAttachment(),
+						msgValue.getDeleteAttachment() == null ? true : msgValue.getDeleteAttachment()
+				);
 				getLogger().info("Sent email to " + msgValue.getReceiver() + " (" + emailAddress + ") with subject " + msgValue.getSubject());
 				return true;
 			} catch (Exception e) {
