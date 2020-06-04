@@ -10,12 +10,14 @@
 package is.idega.idegaweb.egov.message.data;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 
 import com.idega.block.process.message.data.Message;
 import com.idega.data.IDOException;
 import com.idega.data.IDOFactory;
+import com.idega.idegaweb.IWUserContext;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 
@@ -158,6 +160,36 @@ public class UserMessageHomeImpl extends IDOFactory implements UserMessageHome {
     }
 
     @Override
+	public java.util.Collection findMessages(
+			IWUserContext iwuc,
+			com.idega.user.data.bean.User user,
+			String[] status,
+			Boolean onlyForParentCaseCreator,
+			Set<String> parentCasesNotHavingCaseCode,
+			int numberOfEntries,
+			int startingEntry
+	) throws javax.ejb.FinderException {
+    	com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
+        java.util.Collection ids = ((UserMessageBMPBean) entity).ejbFindMessages(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode, numberOfEntries, startingEntry);
+        this.idoCheckInPooledEntity(entity);
+        return this.getEntityCollectionForPrimaryKeys(ids);
+    }
+
+    @Override
+	public int getNumberOfMessages(
+			IWUserContext iwuc,
+			com.idega.user.data.bean.User user,
+			String[] status,
+			Boolean onlyForParentCaseCreator,
+			Set<String> parentCasesNotHavingCaseCode
+	) throws FinderException, IDOException {
+    	 com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
+         int theReturn = ((UserMessageBMPBean) entity).getNumberOfMessages(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
+         this.idoCheckInPooledEntity(entity);
+         return theReturn;
+    }
+
+    @Override
 	public java.util.Collection findMessages(com.idega.user.data.Group group,
             String[] status, int numberOfEntries, int startingEntry)
             throws javax.ejb.FinderException {
@@ -209,8 +241,9 @@ public class UserMessageHomeImpl extends IDOFactory implements UserMessageHome {
         return this.getEntityCollectionForPrimaryKeys(ids);
 
 	}
-	
-	
+
+
+	@Override
 	public Collection<Message>  findMessagesForUser(User user, String status,Boolean read)
 			throws FinderException {
 		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();

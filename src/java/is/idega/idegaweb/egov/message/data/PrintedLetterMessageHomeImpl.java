@@ -10,6 +10,7 @@
 package is.idega.idegaweb.egov.message.data;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 
@@ -18,6 +19,7 @@ import org.apache.commons.lang.NotImplementedException;
 import com.idega.block.process.message.data.Message;
 import com.idega.data.IDOException;
 import com.idega.data.IDOFactory;
+import com.idega.idegaweb.IWUserContext;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
@@ -363,9 +365,25 @@ public class PrintedLetterMessageHomeImpl extends IDOFactory implements PrintedL
 			throws FinderException {
 		return null;
 	}
-	
+
+	@Override
 	public Collection<Message> findMessagesForUser(User user, String status,Boolean read) throws FinderException{
 		//TODO: implement
 		throw new NotImplementedException("Only on usermessages for now");
 	}
+
+	@Override
+	public Collection<? extends Message> findMessages(IWUserContext iwuc, com.idega.user.data.bean.User user,
+			String[] status, Boolean onlyForParentCaseCreator, Set<String> parentCasesNotHavingCaseCode,
+			int numberOfEntries, int startingEntry) throws FinderException {
+		return null;
+	}
+
+	@Override
+	public int getNumberOfMessages(IWUserContext iwuc, com.idega.user.data.bean.User user, String[] status,
+			Boolean onlyForParentCaseCreator, Set<String> parentCasesNotHavingCaseCode)
+			throws FinderException, IDOException {
+		return 0;
+	}
+
 }

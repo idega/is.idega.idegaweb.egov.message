@@ -10,12 +10,14 @@
 package is.idega.idegaweb.egov.message.data;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 
 import com.idega.block.process.message.data.Message;
 import com.idega.data.IDOException;
 import com.idega.data.IDOFactory;
+import com.idega.idegaweb.IWUserContext;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 
@@ -219,6 +221,20 @@ public class CaseNoteHomeImpl extends IDOFactory implements CaseNoteHome {
         this.idoCheckInPooledEntity(entity);
         return this.getEntityCollectionForPrimaryKeys(ids);
 
+	}
+
+	@Override
+	public Collection<? extends Message> findMessages(IWUserContext iwuc, com.idega.user.data.bean.User user,
+			String[] status, Boolean onlyForParentCaseCreator, Set<String> parentCasesNotHavingCaseCode,
+			int numberOfEntries, int startingEntry) throws FinderException {
+		return null;
+	}
+
+	@Override
+	public int getNumberOfMessages(IWUserContext iwuc, com.idega.user.data.bean.User user, String[] status,
+			Boolean onlyForParentCaseCreator, Set<String> parentCasesNotHavingCaseCode)
+			throws FinderException, IDOException {
+		return 0;
 	}
 
 }

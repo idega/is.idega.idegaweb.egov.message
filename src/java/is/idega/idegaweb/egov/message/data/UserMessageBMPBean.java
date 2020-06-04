@@ -1,17 +1,31 @@
 package is.idega.idegaweb.egov.message.data;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 
 import com.idega.block.process.business.ProcessConstants;
 import com.idega.block.process.data.AbstractCaseBMPBean;
 import com.idega.block.process.data.Case;
+import com.idega.block.process.data.CaseBMPBean;
 import com.idega.block.process.message.data.Message;
 import com.idega.data.IDOException;
+import com.idega.data.IDOLookup;
+import com.idega.data.IDOLookupException;
+import com.idega.data.query.CountColumn;
+import com.idega.data.query.InCriteria;
+import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.SelectQuery;
+import com.idega.data.query.Table;
+import com.idega.idegaweb.IWUserContext;
+import com.idega.user.dao.GroupDAO;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
+import com.idega.user.data.UserHome;
+import com.idega.util.ListUtil;
+import com.idega.util.expression.ELUtil;
 
 /**
  * Title: Description: Copyright: Copyright (c) 2002 Company:
@@ -173,6 +187,72 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 		query.addCriteria(idoCriteriaForStatus(status));
 		query.addOrder(idoOrderByCreationDate(false));
 		return super.idoFindPKsByQuery(query, numberOfEntries, startingEntry);
+	}
+
+	public java.util.Collection ejbFindMessages(
+			IWUserContext iwuc,
+			com.idega.user.data.bean.User user,
+			String[] status,
+			Boolean onlyForParentCaseCreator,
+			Set<String> parentCasesNotHavingCaseCode,
+			int numberOfEntries,
+			int startingEntry
+	) throws javax.ejb.FinderException {
+		SelectQuery query = getQuery(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
+		query.addOrder(idoOrderByCreationDate(false));
+		return super.idoFindPKsByQuery(query, numberOfEntries, startingEntry);
+	}
+
+	public int getNumberOfMessages(
+			IWUserContext iwuc,
+			com.idega.user.data.bean.User user,
+			String[] status,
+			Boolean onlyForParentCaseCreator,
+			Set<String> parentCasesNotHavingCaseCode
+	) throws FinderException, IDOException {
+		SelectQuery query = getQuery(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
+		query.removeAllColumns();
+		query.addColumn(new CountColumn(getIDColumnName()));
+		int numberOfRecords = super.idoGetNumberOfRecords(query);
+		return numberOfRecords;
+	}
+
+	private SelectQuery getQuery(IWUserContext iwuc,
+			com.idega.user.data.bean.User user,
+			String[] status,
+			Boolean onlyForParentCaseCreator,
+			Set<String> parentCasesNotHavingCaseCode
+	) throws FinderException {
+		SelectQuery query = idoSelectQueryGetAllCases();
+		UserHome userHome = null;
+		try {
+			userHome = (UserHome) IDOLookup.getHome(User.class);
+		} catch (IDOLookupException e) {}
+		User legacyUser = userHome.findByPrimaryKey(user.getId());
+		query.addCriteria(idoCriteriaForUser(legacyUser));
+		query.addCriteria(idoCriteriaForStatus(status));
+
+		if (onlyForParentCaseCreator != null) {
+			Table messageCases = idoTableGeneralCase();
+			Table parentCases = new Table(CaseBMPBean.TABLE_NAME, "pc");
+			query.addJoin(parentCases, parentCases.getColumn(CaseBMPBean.PK_COLUMN).getName(), messageCases, messageCases.getColumn(CaseBMPBean.COLUMN_PARENT_CASE).getName());
+
+			if (!ListUtil.isEmpty(parentCasesNotHavingCaseCode)) {
+				query.addCriteria(new InCriteria(parentCases.getColumn(CaseBMPBean.COLUMN_CASE_CODE), parentCasesNotHavingCaseCode, true));
+			}
+
+			if (onlyForParentCaseCreator) {
+				query.addCriteria(new MatchCriteria(parentCases.getColumn(CaseBMPBean.COLUMN_USER), MatchCriteria.EQUALS, user.getId()));
+			} else {
+				GroupDAO groupDAO = ELUtil.getInstance().getBean(GroupDAO.class);
+				List<Integer> handlersGroupsIds = groupDAO.getAllGroupsIdsForUser(user, iwuc);
+				if (!ListUtil.isEmpty(handlersGroupsIds)) {
+					query.addCriteria(new InCriteria(parentCases.getColumn(CaseBMPBean.COLUMN_HANDLER), handlersGroupsIds));
+				}
+			}
+		}
+
+		return query;
 	}
 
 	public java.util.Collection ejbFindMessages(com.idega.user.data.Group group, String[] status, int numberOfEntries, int startingEntry) throws javax.ejb.FinderException {
