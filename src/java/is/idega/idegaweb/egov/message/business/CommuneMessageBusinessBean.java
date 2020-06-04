@@ -11,6 +11,8 @@ package is.idega.idegaweb.egov.message.business;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +43,6 @@ import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWMainApplicationSettings;
 import com.idega.idegaweb.IWPropertyList;
 import com.idega.idegaweb.IWUserContext;
-import com.idega.user.business.NoEmailFoundException;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.business.UserProperties;
 import com.idega.user.data.Group;
@@ -50,6 +51,7 @@ import com.idega.util.CoreConstants;
 import com.idega.util.CoreUtil;
 import com.idega.util.EmailValidator;
 import com.idega.util.IWTimestamp;
+import com.idega.util.ListUtil;
 import com.idega.util.SendMail;
 import com.idega.util.StringUtil;
 
@@ -426,42 +428,70 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	private boolean sendEmail(MessageValue msgValue) throws IBOLookupException, RemoteException {
 		String emailAddress = null;
+		Set<String> emailAddresses = new HashSet<>();
 		if (getSettings().getBoolean("msg.send_email.check_provided_email", false)) {
 			emailAddress = msgValue.getEmailAddress();
 		}
+
+		EmailValidator validator = EmailValidator.getInstance();
+
 		if (StringUtil.isEmpty(emailAddress)) {
 			try {
-				Email mail = getServiceInstance(UserBusiness.class).getUsersMainEmail(msgValue.getReceiver());
-				if (mail != null) {
-					emailAddress = mail.getEmailAddress();
+				if (getIWMainApplication().getSettings().getBoolean("msg.send_email.to_all_addresses", false)) {
+					Collection<Email> emails = msgValue.getReceiver().getEmails();
+					if (!ListUtil.isEmpty(emails)) {
+						for (Email email: emails) {
+							String address = email.getEmailAddress();
+							if (validator.isValid(address)) {
+								emailAddresses.add(address);
+							}
+						}
+					}
+				} else {
+					Email mail = msgValue.getReceiver().getUsersEmail();
+					if (mail != null) {
+						emailAddress = mail.getEmailAddress();
+						if (!StringUtil.isEmpty(emailAddress)) {
+							emailAddresses.add(emailAddress);
+						}
+					}
 				}
-			} catch (NoEmailFoundException e) {
-				getLogger().warning("Couldn't find email for " + msgValue.getReceiver());
+			} catch (Exception e) {
+				getLogger().warning("Couldn't find email(s) for " + msgValue.getReceiver());
 			}
-		}
-		if (!EmailValidator.getInstance().isValid(emailAddress)) {
-			emailAddress = msgValue.getEmailAddress();
 		}
 
-		if (EmailValidator.getInstance().isValid(emailAddress)) {
-			try {
-				sendMessage(
-						emailAddress,
-						StringUtil.isEmpty(msgValue.getBcc()) || emailAddress.equals(msgValue.getBcc()) ? null : msgValue.getBcc(),
-						msgValue.getSubject(),
-						msgValue.getBody(),
-						msgValue.getAttachment(),
-						msgValue.getDeleteAttachment() == null ? true : msgValue.getDeleteAttachment()
-				);
-				getLogger().info("Sent email to " + msgValue.getReceiver() + " (" + emailAddress + ") with subject " + msgValue.getSubject());
-				return true;
-			} catch (Exception e) {
-				getLogger().log(Level.WARNING, "Couldn't send message to " + msgValue.getReceiver() + " (" + emailAddress + ") via e-mail.", e);
-			}
+		if (validator.isValid(emailAddress)) {
+			emailAddresses.add(emailAddress);
 		} else {
-			getLogger().warning("Email address '" + emailAddress + "' is not valid");
+			emailAddress = msgValue.getEmailAddress();
+			if (!StringUtil.isEmpty(emailAddress)) {
+				emailAddresses.add(emailAddress);
+			}
 		}
-		return false;
+
+		boolean anySuccess = false;
+		for (String email: emailAddresses) {
+			if (validator.isValid(email)) {
+				try {
+					sendMessage(
+							email,
+							StringUtil.isEmpty(msgValue.getBcc()) || email.equals(msgValue.getBcc()) ? null : msgValue.getBcc(),
+							msgValue.getSubject(),
+							msgValue.getBody(),
+							msgValue.getAttachment(),
+							msgValue.getDeleteAttachment() == null ? true : msgValue.getDeleteAttachment()
+					);
+					getLogger().info("Sent email to " + msgValue.getReceiver() + " (" + email + ") with subject " + msgValue.getSubject());
+					anySuccess = true;
+				} catch (Exception e) {
+					getLogger().log(Level.WARNING, "Couldn't send message to " + msgValue.getReceiver() + " (" + email + ") via e-mail.", e);
+				}
+			} else {
+				getLogger().warning("Email address '" + email + "' is not valid");
+			}
+		}
+		return anySuccess;
 	}
 
 	/**
