@@ -1,17 +1,20 @@
 package is.idega.idegaweb.egov.message.data;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.logging.Level;
 
 import javax.ejb.FinderException;
 
 import com.idega.block.process.data.AbstractCaseBMPBean;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.message.data.Message;
+import com.idega.core.file.data.ICFile;
 import com.idega.data.IDOException;
+import com.idega.data.IDORelationshipException;
 import com.idega.data.query.SelectQuery;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
-
 
 public class CaseNoteBMPBean extends AbstractCaseBMPBean implements CaseNote, Message, Case {
 
@@ -25,24 +28,26 @@ public class CaseNoteBMPBean extends AbstractCaseBMPBean implements CaseNote, Me
 	private static final String COLUMN_CASE_ID = "CASE_ID";
 	private static final String CASE_CODE_KEY = CASE_NOTE_TYPE;
 	private static final String CASE_CODE_DESCRIPTION = "Case Note";
+	private static final String ENTITY_NAME = "CASE_NOTES";
+	private static final String RELATION_FILES = ENTITY_NAME + "_ic_file";
 
 	@Override
 	public String getEntityName() {
-		return "CASE_NOTES";
+		return ENTITY_NAME;
 	}
 
 	@Override
 	public void initializeAttributes() {
 		addGeneralCaseRelation();
+
 		this.addAttribute(COLUMN_SUBJECT, "Message subject", String.class);
 		this.addAttribute(COLUMN_BODY, "Message body", String.class, 4000);
-		//this.addAttribute(COLUMN_SENDER,"Message sender",Integer.class);//temp
-		this.addAttribute(COLUMN_DATE, "Message sender", String.class);//temp
-		this.addAttribute(COLUMN_TEMP_SENDER, "Message sender", String.class);//temp
+		this.addAttribute(COLUMN_DATE, "Message sender", String.class);
+		this.addAttribute(COLUMN_TEMP_SENDER, "Message sender", String.class);
 		this.addManyToOneRelationship(COLUMN_SENDER, User.class);
 		this.addAttribute(COLUMN_CASE_ID, "Case Id", String.class);
 		this.addAttribute(COLUMN_CONTENT_CODE, "Message contentcode", String.class, 30);
-		//this.setNullable(COLUMN_SENDER, true);
+		addManyToManyRelationShip(ICFile.class, RELATION_FILES);
 	}
 
 	@Override
@@ -195,7 +200,6 @@ public class CaseNoteBMPBean extends AbstractCaseBMPBean implements CaseNote, Me
 		query.addCriteria(idoCriteriaForGroup(groups));
 		query.addOrder(idoOrderByCreationDate(false));
 		return super.idoFindPKsByQuery(query, numberOfEntries, startingEntry);
-		//return super.ejbFindAllCasesByUserAndGroupsAndStatusArray(user,groups,status,numberOfEntries,startingEntry);
 	}
 
 	public int ejbHomeGetNumberOfMessages(com.idega.user.data.User user, String[] status) throws IDOException {
@@ -204,6 +208,43 @@ public class CaseNoteBMPBean extends AbstractCaseBMPBean implements CaseNote, Me
 
 	public int ejbHomeGetNumberOfMessages(com.idega.user.data.User user, java.util.Collection groups, String[] status) throws IDOException {
 		return super.ejbHomeGetCountCasesByUserAndGroupsAndStatusArray(user, groups, status);
+	}
+
+	@Override
+	public void removeAllAttachments() {
+		try{
+			idoRemoveFrom(ICFile.class);
+		}catch (Exception e) {
+			getLogger().log(Level.WARNING, "Failed removing files from note " + getPrimaryKey(), e);
+		}
+	}
+
+	@Override
+	public void removeAttachment(ICFile file) {
+		try{
+			idoRemoveFrom(file);
+		}catch (Exception e) {
+			getLogger().log(Level.WARNING, "Failed removing file " + file + " from note " + getPrimaryKey(), e);
+		}
+	}
+
+	@Override
+	public void addAttachment(ICFile file) {
+		try{
+			idoAddTo(file);
+		}catch (Exception e) {
+			getLogger().log(Level.WARNING, "Failed adding file " + file + " to note " + getPrimaryKey(), e);
+		}
+	}
+
+	@Override
+	public Collection<ICFile> getAttachments(){
+		try {
+			return idoGetRelatedEntities(ICFile.class);
+		} catch (IDORelationshipException e) {
+			getLogger().log(Level.WARNING, "Failed getting files of note " + getPrimaryKey(), e);
+		}
+		return Collections.emptyList();
 	}
 
 }

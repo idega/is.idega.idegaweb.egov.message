@@ -9,21 +9,15 @@
  */
 package is.idega.idegaweb.egov.message.data;
 
-
+import java.util.Collection;
 
 import com.idega.block.process.business.ProcessConstants;
 import com.idega.block.process.data.Case;
 import com.idega.block.process.message.data.Message;
+import com.idega.core.file.data.ICFile;
 import com.idega.data.IDOEntity;
 import com.idega.user.data.User;
 
-/**
- *
- *  Last modified: $Date$ by $Author$
- *
- * @author <a href="mailto:aron@idega.com">aron</a>
- * @version $Revision$
- */
 public interface CaseNote extends IDOEntity, Message, Case {
 
 	public static final String CASE_NOTE_TYPE = ProcessConstants.NOTE_CASE_CODE;
@@ -87,5 +81,12 @@ public interface CaseNote extends IDOEntity, Message, Case {
 	void setCaseId(String caseId);
 
 	String getCaseId();
+
+	public void addAttachment(ICFile file);
+
+	public Collection<ICFile> getAttachments();
+
+	public void removeAllAttachments();
+	public void removeAttachment(ICFile file);
 
 }
