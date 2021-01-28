@@ -798,7 +798,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public boolean getIfUserPreferesMessageByEmail(User user) {
-		if (getIWMainApplication().getSettings().getBoolean("msg.skip_check_if_want_receive_email", false)) {
+		if (getIWMainApplication().getSettings().getBoolean("msg.skip_check_if_want_receive_email", true)) {
 			return true;
 		}
 
@@ -839,7 +839,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public boolean getIfCanSendEmail() {
-		return Boolean.valueOf(getPropertyValue(MessageConstants.CAN_SEND_EMAIL, Boolean.FALSE.toString())).booleanValue();
+		return Boolean.valueOf(getPropertyValue(MessageConstants.CAN_SEND_EMAIL, Boolean.TRUE.toString())).booleanValue();
 	}
 
 	@Override
