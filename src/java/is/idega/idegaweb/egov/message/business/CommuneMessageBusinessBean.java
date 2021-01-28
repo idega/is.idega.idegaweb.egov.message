@@ -247,7 +247,17 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			String letterBody, File attachment, boolean sendLetterIfNoEmail,
 			String contentCode, boolean alwaysSendLetter, boolean sendMail, boolean deleteAttachment
 	) {
-		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, deleteAttachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, deleteAttachment, null);
+	}
+
+	@Override
+	public Message createUserMessage(Case parentCase, User receiver,
+			User sender, Group handler, String subject, String body,
+			String letterBody, File attachment, boolean sendLetterIfNoEmail,
+			String contentCode, boolean alwaysSendLetter, boolean sendMail,
+			boolean deleteAttachment, String bcc
+	) {
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, deleteAttachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, bcc);
 	}
 
 	@Override
@@ -321,7 +331,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 
 	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
-		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, true, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, true, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, null);
 	}
 
 	private Message createUserMessage(
@@ -337,9 +347,10 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			boolean sendLetterIfNoEmail,
 			String contentCode,
 			boolean alwaysSendLetter,
-			boolean sendMail
+			boolean sendMail,
+			String bcc
 	) {
-		MessageValue mv = createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, deleteAttachment);
+		MessageValue mv = createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, bcc, deleteAttachment);
 		return createUserMessage(mv);
 	}
 
