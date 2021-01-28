@@ -113,7 +113,8 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 
 	@Override
 	public String toString() {
-		return "To: " + getReceiver() + ", from: " + getSender() + ", subject: " + getSubject() + ", message: " + getLetterBody() + ", to email address: " + getEmailAddress();
+		return "To: " + getReceiver() + ", from: " + getSender() + ", subject: " + getSubject() + ", message: " + getLetterBody() + ", to email address: " + getEmailAddress() +
+				", send mail: " + getSendMail();
 	}
 
 }
