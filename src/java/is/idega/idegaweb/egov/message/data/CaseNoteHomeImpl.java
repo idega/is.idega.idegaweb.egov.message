@@ -224,14 +224,14 @@ public class CaseNoteHomeImpl extends IDOFactory implements CaseNoteHome {
 	}
 
 	@Override
-	public Collection<? extends Message> findMessages(IWUserContext iwuc, com.idega.user.data.bean.User user,
+	public Collection<? extends Message> findMessages(IWUserContext iwuc, Collection<com.idega.user.data.bean.User> receivers,
 			String[] status, Boolean onlyForParentCaseCreator, Set<String> parentCasesNotHavingCaseCode,
 			int numberOfEntries, int startingEntry) throws FinderException {
 		return null;
 	}
 
 	@Override
-	public int getNumberOfMessages(IWUserContext iwuc, com.idega.user.data.bean.User user, String[] status,
+	public int getNumberOfMessages(IWUserContext iwuc, Collection<com.idega.user.data.bean.User> receivers, String[] status,
 			Boolean onlyForParentCaseCreator, Set<String> parentCasesNotHavingCaseCode)
 			throws FinderException, IDOException {
 		return 0;

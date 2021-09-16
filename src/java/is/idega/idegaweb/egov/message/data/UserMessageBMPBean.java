@@ -1,6 +1,8 @@
 package is.idega.idegaweb.egov.message.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +18,6 @@ import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.data.query.CountColumn;
 import com.idega.data.query.InCriteria;
-import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
 import com.idega.idegaweb.IWUserContext;
@@ -191,26 +192,26 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 
 	public java.util.Collection ejbFindMessages(
 			IWUserContext iwuc,
-			com.idega.user.data.bean.User user,
+			Collection<com.idega.user.data.bean.User> receivers,
 			String[] status,
 			Boolean onlyForParentCaseCreator,
 			Set<String> parentCasesNotHavingCaseCode,
 			int numberOfEntries,
 			int startingEntry
 	) throws javax.ejb.FinderException {
-		SelectQuery query = getQuery(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
+		SelectQuery query = getQuery(iwuc, receivers, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
 		query.addOrder(idoOrderByCreationDate(false));
 		return super.idoFindPKsByQuery(query, numberOfEntries, startingEntry);
 	}
 
 	public int getNumberOfMessages(
 			IWUserContext iwuc,
-			com.idega.user.data.bean.User user,
+			Collection<com.idega.user.data.bean.User> receivers,
 			String[] status,
 			Boolean onlyForParentCaseCreator,
 			Set<String> parentCasesNotHavingCaseCode
 	) throws FinderException, IDOException {
-		SelectQuery query = getQuery(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
+		SelectQuery query = getQuery(iwuc, receivers, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
 		query.removeAllColumns();
 		query.addColumn(new CountColumn(getIDColumnName()));
 		int numberOfRecords = super.idoGetNumberOfRecords(query);
@@ -218,7 +219,7 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 	}
 
 	private SelectQuery getQuery(IWUserContext iwuc,
-			com.idega.user.data.bean.User user,
+			Collection<com.idega.user.data.bean.User> receivers,
 			String[] status,
 			Boolean onlyForParentCaseCreator,
 			Set<String> parentCasesNotHavingCaseCode
@@ -228,8 +229,12 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 		try {
 			userHome = (UserHome) IDOLookup.getHome(User.class);
 		} catch (IDOLookupException e) {}
-		User legacyUser = userHome.findByPrimaryKey(user.getId());
-		query.addCriteria(idoCriteriaForUser(legacyUser));
+		Collection<User> users = new ArrayList<>();
+		for (com.idega.user.data.bean.User receiver: receivers) {
+			User user = userHome.findByPrimaryKey(receiver.getId());
+			users.add(user);
+		}
+		query.addCriteria(idoCriteriaForUsers(users));
 		query.addCriteria(idoCriteriaForStatus(status));
 
 		if (onlyForParentCaseCreator != null) {
@@ -242,10 +247,16 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 			}
 
 			if (onlyForParentCaseCreator) {
-				query.addCriteria(new MatchCriteria(parentCases.getColumn(CaseBMPBean.COLUMN_USER), MatchCriteria.EQUALS, user.getId()));
+				query.addCriteria(new InCriteria(parentCases.getColumn(CaseBMPBean.COLUMN_USER), users));
 			} else {
 				GroupDAO groupDAO = ELUtil.getInstance().getBean(GroupDAO.class);
-				List<Integer> handlersGroupsIds = groupDAO.getAllGroupsIdsForUser(user, iwuc);
+				Collection<Integer> handlersGroupsIds = new HashSet<>();
+				for (com.idega.user.data.bean.User user: receivers) {
+					List<Integer> handlerGroupsIds = groupDAO.getAllGroupsIdsForUser(user, iwuc);
+					if (!ListUtil.isEmpty(handlerGroupsIds)) {
+						handlersGroupsIds.addAll(handlerGroupsIds);
+					}
+				}
 				if (!ListUtil.isEmpty(handlersGroupsIds)) {
 					query.addCriteria(new InCriteria(parentCases.getColumn(CaseBMPBean.COLUMN_HANDLER), handlersGroupsIds));
 				}

@@ -162,7 +162,7 @@ public class UserMessageHomeImpl extends IDOFactory implements UserMessageHome {
     @Override
 	public java.util.Collection findMessages(
 			IWUserContext iwuc,
-			com.idega.user.data.bean.User user,
+			Collection<com.idega.user.data.bean.User> receivers,
 			String[] status,
 			Boolean onlyForParentCaseCreator,
 			Set<String> parentCasesNotHavingCaseCode,
@@ -170,7 +170,7 @@ public class UserMessageHomeImpl extends IDOFactory implements UserMessageHome {
 			int startingEntry
 	) throws javax.ejb.FinderException {
     	com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
-        java.util.Collection ids = ((UserMessageBMPBean) entity).ejbFindMessages(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode, numberOfEntries, startingEntry);
+        java.util.Collection ids = ((UserMessageBMPBean) entity).ejbFindMessages(iwuc, receivers, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode, numberOfEntries, startingEntry);
         this.idoCheckInPooledEntity(entity);
         return this.getEntityCollectionForPrimaryKeys(ids);
     }
@@ -178,13 +178,13 @@ public class UserMessageHomeImpl extends IDOFactory implements UserMessageHome {
     @Override
 	public int getNumberOfMessages(
 			IWUserContext iwuc,
-			com.idega.user.data.bean.User user,
+			Collection<com.idega.user.data.bean.User> receivers,
 			String[] status,
 			Boolean onlyForParentCaseCreator,
 			Set<String> parentCasesNotHavingCaseCode
 	) throws FinderException, IDOException {
     	 com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
-         int theReturn = ((UserMessageBMPBean) entity).getNumberOfMessages(iwuc, user, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
+         int theReturn = ((UserMessageBMPBean) entity).getNumberOfMessages(iwuc, receivers, status, onlyForParentCaseCreator, parentCasesNotHavingCaseCode);
          this.idoCheckInPooledEntity(entity);
          return theReturn;
     }
