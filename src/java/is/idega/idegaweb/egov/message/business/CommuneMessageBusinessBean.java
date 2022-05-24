@@ -381,10 +381,13 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			// send as email
 			if (canSendEmail) {
 				if (sendMail) {
-					if (!sendEmail(msgValue)) {
+					Set<String> sentTo = sendEmail(msgValue);
+					if (ListUtil.isEmpty(sentTo)) {
 						// failed to send this email
 						doSendLetter |= msgValue.getSendLetterIfNoEmail().booleanValue();
 						getLogger().info("Failed to send email to " + msgValue.getReceiver() + " about " + msgValue);
+					} else {
+						getLogger().info("Sent email to " + sentTo + " about " + msgValue);
 					}
 				} else {
 					getLogger().info("Not sending email to " + msgValue.getReceiver() + " about " + msgValue);
@@ -437,7 +440,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 	}
 
-	private boolean sendEmail(MessageValue msgValue) throws IBOLookupException, RemoteException {
+	private Set<String> sendEmail(MessageValue msgValue) throws IBOLookupException, RemoteException {
 		String emailAddress = null;
 		Set<String> emailAddresses = new HashSet<>();
 		if (getSettings().getBoolean("msg.send_email.check_provided_email", false)) {
@@ -481,7 +484,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			}
 		}
 
-		boolean anySuccess = false;
+		Set<String> sentTo = new HashSet<>();
 		for (String email: emailAddresses) {
 			if (validator.isValid(email)) {
 				try {
@@ -493,8 +496,8 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 							msgValue.getAttachment(),
 							msgValue.getDeleteAttachment() == null ? true : msgValue.getDeleteAttachment()
 					);
+					sentTo.add(email);
 					getLogger().info("Sent email to " + msgValue.getReceiver() + " (" + email + ") with subject " + msgValue.getSubject());
-					anySuccess = true;
 				} catch (Exception e) {
 					getLogger().log(Level.WARNING, "Couldn't send message to " + msgValue.getReceiver() + " (" + email + ") via e-mail.", e);
 				}
@@ -502,7 +505,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 				getLogger().warning("Email address '" + email + "' is not valid");
 			}
 		}
-		return anySuccess;
+		return ListUtil.isEmpty(sentTo) ? null : sentTo;
 	}
 
 	/**
