@@ -288,4 +288,10 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 		return super.ejbHomeGetCountCasesByUserAndGroupsAndStatusArray(user, groups, status);
 	}
 
+	@Override
+	public int getCreatorId() {
+		User creator = getCreator();
+		return creator == null ? -1 : (Integer) creator.getPrimaryKey();
+	}
+
 }

@@ -247,4 +247,10 @@ public class CaseNoteBMPBean extends AbstractCaseBMPBean implements CaseNote, Me
 		return Collections.emptyList();
 	}
 
+	@Override
+	public int getCreatorId() {
+		User creator = getCreator();
+		return creator == null ? -1 : (Integer) creator.getPrimaryKey();
+	}
+
 }

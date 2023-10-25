@@ -644,4 +644,10 @@ public class PrintedLetterMessageBMPBean extends AbstractCaseBMPBean implements 
 		return super.ejbHomeGetCountCasesByUserAndStatusArray(user, status);
 	}
 
+	@Override
+	public int getCreatorId() {
+		User creator = getCreator();
+		return creator == null ? -1 : (Integer) creator.getPrimaryKey();
+	}
+
 }
