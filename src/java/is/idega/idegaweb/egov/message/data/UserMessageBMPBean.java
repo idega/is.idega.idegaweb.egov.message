@@ -58,7 +58,7 @@ public class UserMessageBMPBean extends AbstractCaseBMPBean implements UserMessa
 	public void initializeAttributes() {
 		addGeneralCaseRelation();
 		this.addAttribute(COLUMN_SUBJECT, "Message subject", String.class);
-		this.addAttribute(COLUMN_BODY, "Message body", String.class, 4000);
+		this.addAttribute(COLUMN_BODY, "Message body", String.class, is.idega.idegaweb.egov.message.business.MessageConstants.MESSAGE_MAX_LENGTH);
 		//this.addAttribute(COLUMN_SENDER,"Message sender",Integer.class);//temp
 		this.addAttribute(COLUMN_DATE, "Message sender", String.class);//temp
 		this.addAttribute(COLUMN_TEMP_SENDER, "Message sender", String.class);//temp
