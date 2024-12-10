@@ -275,8 +275,17 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	}
 
 	@Override
+	public Message createUserMessage(Case parentCase, User receiver, User sender, String subject, String body, boolean sendLetter, String fromAddress) {
+		return createUserMessage(parentCase, receiver, sender, null, fromAddress, subject, body, sendLetter);
+	}
+
+	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, boolean sendLetter) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, body, sendLetter, null, false, sendLetter);
+	}
+
+	private Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String fromAddress, String subject, String body, boolean sendLetter) {
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, body, sendLetter, null, false, sendLetter, fromAddress);
 	}
 
 	@Override
@@ -297,6 +306,10 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, null, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail);
+	}
+
+	private Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail, String fromAddress) {
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, null, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, fromAddress);
 	}
 
 	@Override
@@ -351,6 +364,10 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 	@Override
 	public Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail) {
 		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, true, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, null);
+	}
+
+	private Message createUserMessage(Case parentCase, User receiver, User sender, Group handler, String subject, String body, String letterBody, File attachment, boolean sendLetterIfNoEmail, String contentCode, boolean alwaysSendLetter, boolean sendMail, String fromAddress) {
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, true, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, null, fromAddress);
 	}
 
 	private Message createUserMessage(

@@ -165,6 +165,9 @@ public interface CommuneMessageBusiness extends IBOService, MessageBusiness {
 	public Message createUserMessage(Case parentCase, User receiver,
 			User sender, String subject, String body, boolean sendLetter)
 			throws RemoteException;
+	public Message createUserMessage(Case parentCase, User receiver,
+			User sender, String subject, String body, boolean sendLetter, String fromAddress)
+			throws RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.egov.message.business.CommuneMessageBusinessBean#createUserMessage
