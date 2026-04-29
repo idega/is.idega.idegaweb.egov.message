@@ -27,6 +27,7 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
    private Boolean sendMail;
    private String printedLetterType;
    private File attachment = null;
+   private File[] attachments;
    private String bcc;
    private String emailAddress;
    private Boolean deleteAttachment = Boolean.TRUE;
@@ -118,6 +119,14 @@ public class MessageValue extends com.idega.block.process.message.business.Messa
 
 	public void setFromAddress(String fromAddress) {
 		this.fromAddress = fromAddress;
+	}
+
+	public File[] getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(File[] attachments) {
+		this.attachments = attachments;
 	}
 
 	@Override

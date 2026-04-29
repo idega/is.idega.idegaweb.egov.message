@@ -256,7 +256,32 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			String letterBody, File attachment, boolean sendLetterIfNoEmail,
 			String contentCode, String fromAddress, boolean alwaysSendLetter, boolean sendMail, boolean deleteAttachment
 	) {
-		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, deleteAttachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, null, fromAddress);
+		File[] attachments = attachment == null ? null : new File[] {attachment};
+		return createUserMessage(
+				parentCase,
+				receiver,
+				sender,
+				handler,
+				subject,
+				body,
+				letterBody,
+				attachments,
+				sendLetterIfNoEmail,
+				contentCode,
+				fromAddress,
+				alwaysSendLetter,
+				sendMail,
+				deleteAttachment
+		);
+	}
+
+	@Override
+	public Message createUserMessage(Case parentCase, User receiver,
+			User sender, Group handler, String subject, String body,
+			String letterBody, File[] attachments, boolean sendLetterIfNoEmail,
+			String contentCode, String fromAddress, boolean alwaysSendLetter, boolean sendMail, boolean deleteAttachment
+	) {
+		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, null, deleteAttachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, null, fromAddress, attachments);
 	}
 
 	@Override
@@ -266,7 +291,50 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			String contentCode, boolean alwaysSendLetter, boolean sendMail,
 			boolean deleteAttachment, String bcc
 	) {
-		return createUserMessage(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, deleteAttachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, bcc);
+		File[] attachments = attachment == null ? null : new File[] {attachment};
+		return createUserMessage(
+				parentCase,
+				receiver,
+				sender,
+				handler,
+				subject,
+				body,
+				letterBody,
+				attachments,
+				sendLetterIfNoEmail,
+				contentCode,
+				alwaysSendLetter,
+				sendMail,
+				deleteAttachment,
+				bcc
+		);
+	}
+
+	@Override
+	public Message createUserMessage(Case parentCase, User receiver,
+			User sender, Group handler, String subject, String body,
+			String letterBody, File[] attachments, boolean sendLetterIfNoEmail,
+			String contentCode, boolean alwaysSendLetter, boolean sendMail,
+			boolean deleteAttachment, String bcc
+	) {
+		return createUserMessage(
+				parentCase,
+				receiver,
+				sender,
+				handler,
+				subject,
+				body,
+				letterBody,
+				null,
+				deleteAttachment,
+				sendLetterIfNoEmail,
+				contentCode,
+				alwaysSendLetter,
+				sendMail,
+				bcc,
+				null,
+				attachments
+		);
 	}
 
 	@Override
@@ -343,7 +411,8 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			User sender, Group handler, String subject, String body,
 			String letterBody, File attachment, boolean sendLetterIfNoEmail,
 			String contentCode, boolean alwaysSendLetter, boolean sendMail, String bcc,
-			boolean deleteAttachment, String fromAddress
+			boolean deleteAttachment, String fromAddress,
+			File...attachments
 	) {
 		MessageValue value = new MessageValue();
 		setSimpleMessage(value, parentCase, receiver, subject, body);
@@ -355,6 +424,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		value.setAlwaysSendLetter(new Boolean(alwaysSendLetter));
 		value.setSendMail(new Boolean(sendMail));
 		value.setAttachment(attachment);
+		value.setAttachments(attachments);
 		value.setBcc(bcc);
 		value.setDeleteAttachment(deleteAttachment);
 		value.setFromAddress(fromAddress);
@@ -420,9 +490,10 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 			boolean alwaysSendLetter,
 			boolean sendMail,
 			String bcc,
-			String fromAddress
+			String fromAddress,
+			File... attachments
 	) {
-		MessageValue mv = createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, bcc, deleteAttachment, fromAddress);
+		MessageValue mv = createUserMessageValue(parentCase, receiver, sender, handler, subject, body, letterBody, attachment, sendLetterIfNoEmail, contentCode, alwaysSendLetter, sendMail, bcc, deleteAttachment, fromAddress, attachments);
 		return createUserMessage(mv);
 	}
 
@@ -824,7 +895,7 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		sendMessage(email, bcc, subject, body, attachment, true, null);
 	}
 
-	private void sendMessage(String email, String bcc, String subject, String body, File attachment, boolean deleteAttachment, String fromAddress) {
+	private void sendMessage(String email, String bcc, String subject, String body, File attachment, boolean deleteAttachment, String fromAddress, File... attachments) {
 		String receiver = email.trim();
 		String mailServer = MessagingSettings.DEFAULT_SMTP_MAILSERVER;
 		String forcedToAddress = null;
@@ -860,7 +931,9 @@ public class CommuneMessageBusinessBean extends MessageBusinessBean implements C
 		}
 
 		try {
-			SendMail.send(fromAddress, receiver, CoreConstants.EMPTY, bccReceiver, mailServer, subject, body, false, deleteAttachment, attachment);
+			File[] attachmentsToSend = attachment == null ? attachments : new File[] {attachment};
+			String mailType = null;
+			SendMail.send(fromAddress, receiver, CoreConstants.EMPTY, bccReceiver, null, mailServer, subject, body, mailType, deleteAttachment, false, attachmentsToSend);
 		} catch (MessagingException me) {
 			String message = "Error sending mail to address: " + email + ". Message was:\n" + me.getMessage();
 			LOGGER.log(Level.WARNING, message, me);
